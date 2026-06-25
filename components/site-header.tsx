@@ -27,12 +27,6 @@ export function SiteHeader() {
           >
             Instagram
           </a>
-          <Link
-            href="/admin"
-            className="rounded-full border border-white/15 px-4 py-2 text-cream/80 transition hover:border-gold/40 hover:text-gold-light"
-          >
-            Admin
-          </Link>
         </nav>
       </div>
     </header>
