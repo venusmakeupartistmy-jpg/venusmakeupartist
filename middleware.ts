@@ -60,5 +60,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/v-studio-ledger-x7k9", "/v-studio-ledger-x7k9/:path*"],
+  matcher: ["/login-admin", "/login-admin/:path*"],
 };

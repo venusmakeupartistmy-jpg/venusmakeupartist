@@ -5,7 +5,7 @@ Website and live sales ledger for **venusmakeupartist.site**.
 ## Features
 
 - Public makeup artist homepage
-- Password-protected sales dashboard at `/v-studio-ledger-x7k9`
+- Password-protected sales dashboard at `/login-admin`
 - Live sales ledger that refreshes every 2 seconds
 - Record client, service, amount, payment method, and notes
 - Daily totals and sales count
@@ -46,7 +46,7 @@ npm run dev
 Open:
 
 - Website: [http://localhost:3000](http://localhost:3000)
-- Sales dashboard: [http://localhost:3000/v-studio-ledger-x7k9](http://localhost:3000/v-studio-ledger-x7k9)
+- Sales dashboard: [http://localhost:3000/login-admin](http://localhost:3000/login-admin)
 
 ### 4. Deploy to Vercel
 
@@ -59,7 +59,7 @@ Your domain `venusmakeupartist.site` is already added in Vercel.
 
 ## Sales dashboard
 
-- URL: `/v-studio-ledger-x7k9` (not linked on the public site)
+- URL: `/login-admin` (not linked on the public site)
 - Password: value of `ADMIN_PASSWORD` in your env vars, or a password changed in **Settings**
 - Filter sales by past week, this month, or a custom date range
 - Edit service names in **Settings**, or edit a service on any sale row
