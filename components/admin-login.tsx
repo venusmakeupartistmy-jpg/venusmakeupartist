@@ -1,7 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
+import {
+  ADMIN_API_LOGIN_PATH,
+  ADMIN_LOGIN_PATH,
+} from "@/lib/admin-path";
 
 export function AdminLoginForm({ nextPath }: { nextPath: string }) {
   const router = useRouter();
@@ -14,7 +18,7 @@ export function AdminLoginForm({ nextPath }: { nextPath: string }) {
     setLoading(true);
     setError("");
 
-    const response = await fetch("/api/admin/login", {
+    const response = await fetch(ADMIN_API_LOGIN_PATH, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ password }),
@@ -66,8 +70,8 @@ export function AdminLogoutButton() {
 
   async function onLogout() {
     setLoading(true);
-    await fetch("/api/admin/login", { method: "DELETE" });
-    router.push("/admin/login");
+    await fetch(ADMIN_API_LOGIN_PATH, { method: "DELETE" });
+    router.push(ADMIN_LOGIN_PATH);
     router.refresh();
   }
 

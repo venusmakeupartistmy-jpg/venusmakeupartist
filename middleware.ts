@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { ADMIN_LOGIN_PATH, ADMIN_PATH } from "@/lib/admin-path";
 
 const ADMIN_COOKIE = "venus_admin_session";
 
@@ -38,11 +39,11 @@ async function verifyAdminToken(token: string | undefined, secret: string) {
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (!pathname.startsWith("/admin")) {
+  if (!pathname.startsWith(ADMIN_PATH)) {
     return NextResponse.next();
   }
 
-  if (pathname === "/admin/login") {
+  if (pathname === ADMIN_LOGIN_PATH) {
     return NextResponse.next();
   }
 
@@ -50,7 +51,7 @@ export async function middleware(request: NextRequest) {
   const token = request.cookies.get(ADMIN_COOKIE)?.value;
 
   if (!secret || !(await verifyAdminToken(token, secret))) {
-    const loginUrl = new URL("/admin/login", request.url);
+    const loginUrl = new URL(ADMIN_LOGIN_PATH, request.url);
     loginUrl.searchParams.set("next", pathname);
     return NextResponse.redirect(loginUrl);
   }
@@ -59,5 +60,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: ["/v-studio-ledger-x7k9", "/v-studio-ledger-x7k9/:path*"],
 };

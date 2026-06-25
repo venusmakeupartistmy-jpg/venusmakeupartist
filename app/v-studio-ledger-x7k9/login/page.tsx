@@ -1,4 +1,5 @@
 import { AdminLoginForm } from "@/components/admin-login";
+import { ADMIN_PATH, isAdminPath } from "@/lib/admin-path";
 
 export default async function AdminLoginPage({
   searchParams,
@@ -6,7 +7,8 @@ export default async function AdminLoginPage({
   searchParams: Promise<{ next?: string }>;
 }) {
   const params = await searchParams;
-  const nextPath = params.next?.startsWith("/admin") ? params.next : "/admin";
+  const nextPath =
+    params.next && isAdminPath(params.next) ? params.next : ADMIN_PATH;
 
   return (
     <main className="flex min-h-screen items-center justify-center px-4 py-10">
