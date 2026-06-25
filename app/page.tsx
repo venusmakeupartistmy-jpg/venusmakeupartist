@@ -1,4 +1,7 @@
 import { INSTAGRAM_URL, SiteFooter, SiteHeader } from "@/components/site-header";
+import { PortfolioImage } from "@/components/portfolio-image";
+import { portfolioImages } from "@/lib/portfolio";
+import Image from "next/image";
 
 const services = [
   {
@@ -21,14 +24,8 @@ const services = [
   },
 ];
 
-const portfolioTiles = [
-  { className: "bg-portrait-tile-1", label: "Bridal glow" },
-  { className: "bg-portrait-tile-2", label: "Soft glam" },
-  { className: "bg-portrait-tile-3", label: "Golden hour" },
-  { className: "bg-portrait-tile-4", label: "Evening look" },
-  { className: "bg-portrait-tile-5", label: "Editorial" },
-  { className: "bg-portrait-tile-6", label: "Creative" },
-];
+const profileImage = portfolioImages[0];
+const feedImages = portfolioImages.slice(1);
 
 export default function HomePage() {
   return (
@@ -74,21 +71,34 @@ export default function HomePage() {
               <div className="absolute -inset-4 rounded-[2.5rem] bg-gradient-to-br from-gold/25 via-transparent to-blush/20 blur-2xl" />
               <div className="relative overflow-hidden rounded-[2rem] border border-gold/20 bg-black/20 p-3 shadow-2xl shadow-black/40 backdrop-blur-sm">
                 <div className="grid grid-cols-3 gap-2">
-                  {portfolioTiles.slice(0, 3).map((tile) => (
-                    <div
-                      key={tile.label}
-                      className={`aspect-[3/4] rounded-xl ${tile.className}`}
+                  {feedImages.slice(0, 3).map((image) => (
+                    <PortfolioImage
+                      key={image.src}
+                      src={image.src}
+                      alt={image.label}
+                      className="aspect-[3/4] rounded-xl"
                     />
                   ))}
                 </div>
                 <div className="mt-2 flex items-center justify-between px-2 py-3">
-                  <div>
-                    <p className="text-xs tracking-[0.25em] text-gold uppercase">
-                      @venusss_makeupartist
-                    </p>
-                    <p className="mt-1 font-serif text-xl text-cream">
-                      Captured looks
-                    </p>
+                  <div className="flex items-center gap-3">
+                    <div className="relative h-11 w-11 overflow-hidden rounded-full border border-gold/30">
+                      <Image
+                        src={profileImage.src}
+                        alt={profileImage.label}
+                        fill
+                        sizes="44px"
+                        className="object-cover"
+                      />
+                    </div>
+                    <div>
+                      <p className="text-xs tracking-[0.25em] text-gold uppercase">
+                        @venusss_makeupartist
+                      </p>
+                      <p className="mt-1 font-serif text-xl text-cream">
+                        Captured looks
+                      </p>
+                    </div>
                   </div>
                   <a
                     href={INSTAGRAM_URL}
@@ -126,21 +136,14 @@ export default function HomePage() {
             </div>
 
             <div className="mt-10 grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4">
-              {portfolioTiles.map((tile) => (
-                <a
-                  key={tile.label}
-                  href={INSTAGRAM_URL}
-                  target="_blank"
-                  rel="noreferrer"
-                  className={`group relative aspect-[4/5] overflow-hidden rounded-2xl ${tile.className}`}
-                >
-                  <div className="absolute inset-0 bg-espresso/0 transition group-hover:bg-espresso/25" />
-                  <div className="absolute inset-x-0 bottom-0 translate-y-full bg-gradient-to-t from-espresso/80 to-transparent p-4 transition group-hover:translate-y-0">
-                    <p className="text-xs tracking-[0.2em] text-gold-light uppercase">
-                      {tile.label}
-                    </p>
-                  </div>
-                </a>
+              {feedImages.map((image) => (
+                <PortfolioImage
+                  key={image.src}
+                  src={image.src}
+                  alt={image.label}
+                  label={image.label}
+                  className="aspect-[4/5] rounded-2xl"
+                />
               ))}
             </div>
           </div>
