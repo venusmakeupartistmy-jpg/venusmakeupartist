@@ -1,6 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import {
+  ADMIN_API_LOGIN_PATH,
+  ADMIN_LOGIN_PATH,
+} from "@/lib/admin-path";
 
 type Props = {
   services: string[];
@@ -46,6 +50,7 @@ export function AdminSettingsPanel({ services, onServicesUpdated }: Props) {
 
     const response = await fetch("/api/settings", {
       method: "PATCH",
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ services: draftServices }),
     });
@@ -69,6 +74,12 @@ export function AdminSettingsPanel({ services, onServicesUpdated }: Props) {
     setMessage("");
     setError("");
 
+    if (newPassword.length < 8) {
+      setSavingPassword(false);
+      setError("New password must be at least 8 characters.");
+      return;
+    }
+
     if (newPassword !== confirmPassword) {
       setSavingPassword(false);
       setError("New passwords do not match.");
@@ -77,6 +88,7 @@ export function AdminSettingsPanel({ services, onServicesUpdated }: Props) {
 
     const response = await fetch("/api/settings/password", {
       method: "POST",
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         currentPassword,
@@ -84,18 +96,21 @@ export function AdminSettingsPanel({ services, onServicesUpdated }: Props) {
       }),
     });
 
-    setSavingPassword(false);
-
     if (!response.ok) {
+      setSavingPassword(false);
       const data = (await response.json()) as { error?: string };
       setError(data.error ?? "Could not change password.");
       return;
     }
 
+    setSavingPassword(false);
+    setOpen(false);
     setCurrentPassword("");
     setNewPassword("");
     setConfirmPassword("");
-    setMessage("Password updated.");
+
+    await fetch(ADMIN_API_LOGIN_PATH, { method: "DELETE", credentials: "include" });
+    window.location.href = `${ADMIN_LOGIN_PATH}?passwordUpdated=1`;
   }
 
   return (
@@ -181,7 +196,9 @@ export function AdminSettingsPanel({ services, onServicesUpdated }: Props) {
             <section className="mt-10 border-t border-rose-100 pt-8">
               <h3 className="font-serif text-2xl text-rose-950">Change password</h3>
               <p className="mt-1 text-sm text-rose-800/70">
-                Password changes apply immediately for future sign-ins.
+                Use your current login password, then choose a new one with at
+                least 8 characters. You will be signed out to confirm the new
+                password works.
               </p>
 
               <div className="mt-4 grid gap-4">

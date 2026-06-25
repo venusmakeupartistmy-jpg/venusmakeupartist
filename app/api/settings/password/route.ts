@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { isAdminAuthenticated } from "@/lib/auth-server";
 import { changeAdminPassword } from "@/lib/settings-server";
 
+export const runtime = "nodejs";
+
 function unauthorized() {
   return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 }

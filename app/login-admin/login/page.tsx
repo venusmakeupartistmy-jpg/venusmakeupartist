@@ -4,11 +4,12 @@ import { ADMIN_PATH, isAdminPath } from "@/lib/admin-path";
 export default async function AdminLoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ next?: string }>;
+  searchParams: Promise<{ next?: string; passwordUpdated?: string }>;
 }) {
   const params = await searchParams;
   const nextPath =
     params.next && isAdminPath(params.next) ? params.next : ADMIN_PATH;
+  const passwordUpdated = params.passwordUpdated === "1";
 
   return (
     <main className="flex min-h-screen items-center justify-center px-4 py-10">
@@ -20,6 +21,11 @@ export default async function AdminLoginPage({
         <p className="mt-2 text-sm text-rose-800/70">
           Access your live sales ledger and record new bookings.
         </p>
+        {passwordUpdated ? (
+          <p className="mt-4 rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+            Password updated. Sign in with your new password.
+          </p>
+        ) : null}
         <div className="mt-8">
           <AdminLoginForm nextPath={nextPath} />
         </div>

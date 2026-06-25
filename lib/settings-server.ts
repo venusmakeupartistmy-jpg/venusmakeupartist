@@ -19,17 +19,26 @@ async function getSetting<T>(key: string): Promise<T | null> {
 
 async function setSetting(key: string, value: unknown) {
   const supabase = createServiceClient();
-  const { error } = await supabase.from("app_settings").upsert({
-    key,
-    value,
-    updated_at: new Date().toISOString(),
-  });
+  const { error } = await supabase.from("app_settings").upsert(
+    {
+      key,
+      value,
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: "key" },
+  );
 
   if (error) throw new Error(error.message);
 }
 
+function normalizePasswordHash(value: unknown) {
+  if (typeof value !== "string") return null;
+  const trimmed = value.trim();
+  return trimmed.includes(":") ? trimmed : null;
+}
+
 export async function getStoredPasswordHash() {
-  return getSetting<string>(PASSWORD_KEY);
+  return normalizePasswordHash(await getSetting<string>(PASSWORD_KEY));
 }
 
 export async function getServicePresets() {
