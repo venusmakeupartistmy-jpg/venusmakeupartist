@@ -1,15 +1,31 @@
 @import "tailwindcss";
 
 :root {
-  --background: #faf6f4;
-  --foreground: #3f2428;
+  --background: #f3ece3;
+  --foreground: #1c1410;
+  --cream: #f8f3ec;
+  --champagne: #d4b896;
+  --gold: #b8956a;
+  --gold-light: #e8d4b8;
+  --blush: #d9a89a;
+  --espresso: #1a1410;
+  --mocha: #3d2e28;
+  --taupe: #8c7268;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-cream: var(--cream);
+  --color-champagne: var(--champagne);
+  --color-gold: var(--gold);
+  --color-gold-light: var(--gold-light);
+  --color-blush: var(--blush);
+  --color-espresso: var(--espresso);
+  --color-mocha: var(--mocha);
+  --color-taupe: var(--taupe);
   --font-sans: var(--font-geist-sans);
-  --font-serif: var(--font-playfair);
+  --font-serif: var(--font-cormorant);
 }
 
 body {
@@ -19,5 +35,43 @@ body {
 }
 
 .font-serif {
-  font-family: var(--font-playfair), Georgia, "Times New Roman", serif;
+  font-family: var(--font-cormorant), Georgia, "Times New Roman", serif;
+}
+
+.text-gold-gradient {
+  background: linear-gradient(135deg, #e8d4b8 0%, #b8956a 50%, #d4b896 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.bg-editorial-glow {
+  background:
+    radial-gradient(circle at 20% 20%, rgba(212, 184, 150, 0.22), transparent 42%),
+    radial-gradient(circle at 80% 0%, rgba(217, 168, 154, 0.14), transparent 35%),
+    linear-gradient(180deg, #1a1410 0%, #2a211c 55%, #1a1410 100%);
+}
+
+.bg-portrait-tile-1 {
+  background: linear-gradient(145deg, #5c4038 0%, #c4877a 45%, #f0d5c4 100%);
+}
+
+.bg-portrait-tile-2 {
+  background: linear-gradient(160deg, #2a211c 0%, #8c7268 40%, #e8d4b8 100%);
+}
+
+.bg-portrait-tile-3 {
+  background: linear-gradient(135deg, #3d2e28 0%, #b8956a 50%, #f5e6d8 100%);
+}
+
+.bg-portrait-tile-4 {
+  background: linear-gradient(180deg, #1a1410 0%, #6b4c44 55%, #d9a89a 100%);
+}
+
+.bg-portrait-tile-5 {
+  background: linear-gradient(125deg, #4a372f 0%, #d4b896 60%, #f8f3ec 100%);
+}
+
+.bg-portrait-tile-6 {
+  background: linear-gradient(155deg, #2f2420 0%, #a67c6d 45%, #edd9c8 100%);
 }

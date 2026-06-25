@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Playfair_Display } from "next/font/google";
+import { Cormorant_Garamond, Geist } from "next/font/google";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -7,16 +7,25 @@ const geistSans = Geist({
   subsets: ["latin"],
 });
 
-const playfair = Playfair_Display({
-  variable: "--font-playfair",
+const cormorant = Cormorant_Garamond({
+  variable: "--font-cormorant",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
-  title: "Venus Makeup Artist",
+  title: "Venus Makeup Artist | Kuala Lumpur",
   description:
-    "Professional bridal, event, and photoshoot makeup artist in Malaysia.",
+    "Personal, bridal, dinner and creative makeup styling by Venus. Based in Kuala Lumpur, Malaysia.",
   metadataBase: new URL("https://venusmakeupartist.site"),
+  openGraph: {
+    title: "Venus Makeup Artist",
+    description:
+      "Personal, bridal, dinner and creative makeup styling in Kuala Lumpur.",
+    url: "https://venusmakeupartist.site",
+    siteName: "Venus Makeup Artist",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
@@ -27,7 +36,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${playfair.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${cormorant.variable} h-full scroll-smooth antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
