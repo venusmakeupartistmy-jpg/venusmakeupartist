@@ -2,18 +2,10 @@ import { NextResponse } from "next/server";
 import {
   ADMIN_COOKIE,
   createAdminToken,
-  getAdminPassword,
 } from "@/lib/auth";
+import { verifyAdminPassword } from "@/lib/settings-server";
 
 export async function POST(request: Request) {
-  const password = getAdminPassword();
-  if (!password) {
-    return NextResponse.json(
-      { error: "Admin password is not configured." },
-      { status: 500 },
-    );
-  }
-
   const secret = process.env.ADMIN_SECRET;
   if (!secret) {
     return NextResponse.json(
@@ -23,7 +15,7 @@ export async function POST(request: Request) {
   }
 
   const body = (await request.json()) as { password?: string };
-  if (body.password !== password) {
+  if (!body.password || !(await verifyAdminPassword(body.password))) {
     return NextResponse.json({ error: "Wrong password." }, { status: 401 });
   }
 

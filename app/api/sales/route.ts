@@ -12,6 +12,8 @@ export async function GET(request: Request) {
 
   const { searchParams } = new URL(request.url);
   const date = searchParams.get("date");
+  const from = searchParams.get("from");
+  const to = searchParams.get("to");
 
   const supabase = createServiceClient();
   let query = supabase
@@ -19,13 +21,15 @@ export async function GET(request: Request) {
     .select("*")
     .order("sold_at", { ascending: false });
 
-  if (date) {
+  if (from && to) {
+    query = query.gte("sold_at", from).lte("sold_at", to);
+  } else if (date) {
     const start = `${date}T00:00:00.000+08:00`;
     const end = `${date}T23:59:59.999+08:00`;
     query = query.gte("sold_at", start).lte("sold_at", end);
   }
 
-  const { data, error } = await query.limit(200);
+  const { data, error } = await query.limit(500);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

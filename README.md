@@ -18,7 +18,9 @@ Use a **separate** Supabase project from Sihamla.
 
 1. Go to [supabase.com/dashboard](https://supabase.com/dashboard)
 2. Create a new project, e.g. `venus-makeup-artist`
-3. In **SQL Editor**, run the migration in `supabase/migrations/001_sales.sql`
+3. In **SQL Editor**, run the migrations in order:
+   - `supabase/migrations/001_sales.sql`
+   - `supabase/migrations/002_settings.sql`
 
 ### 2. Environment variables
 
@@ -58,5 +60,8 @@ Your domain `venusmakeupartist.site` is already added in Vercel.
 ## Sales dashboard
 
 - URL: `/v-studio-ledger-x7k9` (not linked on the public site)
-- Password: value of `ADMIN_PASSWORD` in your env vars
+- Password: value of `ADMIN_PASSWORD` in your env vars, or a password changed in **Settings**
+- Filter sales by past week, this month, or a custom date range
+- Edit service names in **Settings**, or edit a service on any sale row
+- Change your dashboard password in **Settings**
 - Sales sync automatically every 2 seconds while the page is open

@@ -1,26 +1,33 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
-  DEFAULT_SERVICES,
   PAYMENT_METHODS,
   type PaymentMethod,
   type Sale,
 } from "@/lib/types";
 
 type Props = {
+  services: string[];
   onCreated: (sale: Sale) => void;
 };
 
-export function SalesForm({ onCreated }: Props) {
+export function SalesForm({ services, onCreated }: Props) {
   const [clientName, setClientName] = useState("");
-  const [service, setService] = useState(DEFAULT_SERVICES[0]);
+  const [service, setService] = useState(services[0] ?? "");
   const [customService, setCustomService] = useState("");
   const [amount, setAmount] = useState("");
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("cash");
   const [notes, setNotes] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (service === "custom") return;
+    if (!services.includes(service)) {
+      setService(services[0] ?? "custom");
+    }
+  }, [service, services]);
 
   async function onSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -56,7 +63,7 @@ export function SalesForm({ onCreated }: Props) {
     setAmount("");
     setNotes("");
     setCustomService("");
-    setService(DEFAULT_SERVICES[0]);
+    setService(services[0] ?? "custom");
     setPaymentMethod("cash");
   }
 
@@ -102,7 +109,7 @@ export function SalesForm({ onCreated }: Props) {
             onChange={(event) => setService(event.target.value)}
             className="w-full rounded-xl border border-rose-200 px-4 py-3 outline-none focus:ring-2 focus:ring-rose-300"
           >
-            {DEFAULT_SERVICES.map((item) => (
+            {services.map((item) => (
               <option key={item} value={item}>
                 {item}
               </option>
