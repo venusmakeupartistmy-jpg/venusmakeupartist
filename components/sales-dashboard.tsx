@@ -136,7 +136,7 @@ export function SalesDashboard() {
           <p className="text-sm uppercase tracking-[0.2em] text-rose-700">
             Live sales ledger
           </p>
-          <h1 className="font-serif text-4xl text-rose-950">Venus Admin</h1>
+          <h1 className="font-serif text-3xl text-rose-950 sm:text-4xl">Venus Admin</h1>
           <p className="mt-2 text-rose-800/70">{formatRangeLabel(range)}</p>
         </div>
         <div className="flex flex-wrap items-center gap-3">
