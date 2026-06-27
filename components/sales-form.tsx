@@ -10,9 +10,10 @@ import {
 type Props = {
   services: string[];
   onCreated: (sale: Sale) => void;
+  className?: string;
 };
 
-export function SalesForm({ services, onCreated }: Props) {
+export function SalesForm({ services, onCreated, className = "" }: Props) {
   const [clientName, setClientName] = useState("");
   const [service, setService] = useState(services[0] ?? "");
   const [customService, setCustomService] = useState("");
@@ -70,7 +71,7 @@ export function SalesForm({ services, onCreated }: Props) {
   return (
     <form
       onSubmit={onSubmit}
-      className="min-w-0 rounded-3xl border border-rose-100 bg-white/80 p-4 shadow-sm backdrop-blur sm:p-6"
+      className={`min-w-0 rounded-3xl border border-rose-100 bg-white/80 p-4 shadow-sm backdrop-blur sm:p-6 ${className}`}
     >
       <h2 className="font-serif text-xl text-rose-950 sm:text-2xl">Record a sale</h2>
       <p className="mt-1 text-sm text-rose-800/70">

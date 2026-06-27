@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { isAdminAuthenticated } from "@/lib/auth-server";
+import { validateSaleUpdate } from "@/lib/sale-utils";
 import { createServiceClient } from "@/lib/supabase/server";
+import type { SaleUpdateInput } from "@/lib/types";
 
 function unauthorized() {
   return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -13,16 +15,24 @@ export async function PATCH(
   if (!(await isAdminAuthenticated())) return unauthorized();
 
   const { id } = await context.params;
-  const body = (await request.json()) as { service?: string };
+  const body = (await request.json()) as SaleUpdateInput;
 
-  if (!body.service?.trim()) {
-    return NextResponse.json({ error: "Service is required." }, { status: 400 });
+  const validationError = validateSaleUpdate(body);
+  if (validationError) {
+    return NextResponse.json({ error: validationError }, { status: 400 });
   }
 
   const supabase = createServiceClient();
   const { data, error } = await supabase
     .from("sales")
-    .update({ service: body.service.trim() })
+    .update({
+      client_name: body.client_name.trim(),
+      service: body.service.trim(),
+      amount: body.amount,
+      payment_method: body.payment_method,
+      notes: body.notes.trim(),
+      sold_at: body.sold_at,
+    })
     .eq("id", id)
     .select("*")
     .single();

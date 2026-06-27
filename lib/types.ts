@@ -20,6 +20,15 @@ export type SaleInput = {
   sold_at?: string;
 };
 
+export type SaleUpdateInput = {
+  client_name: string;
+  service: string;
+  amount: number;
+  payment_method: PaymentMethod;
+  notes: string;
+  sold_at: string;
+};
+
 export const PAYMENT_METHODS: { value: PaymentMethod; label: string }[] = [
   { value: "cash", label: "Cash" },
   { value: "card", label: "Card" },
