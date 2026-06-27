@@ -13,7 +13,8 @@
     "sync:instagram:posts": "node scripts/sync-specific-posts.mjs",
     "sync:instagram:posts:cdp": "node scripts/sync-specific-posts.mjs --cdp=http://127.0.0.1:9222",
     "process:brand-logos": "node scripts/process-brand-logos.mjs",
-    "process:favicon": "node scripts/make-round-favicon.mjs"
+    "process:favicon": "node scripts/make-round-favicon.mjs",
+    "process:ig-2": "node scripts/redownload-ig-2.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.108.2",

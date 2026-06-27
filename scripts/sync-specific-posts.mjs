@@ -43,7 +43,27 @@ for (let index = 0; index < posts.length; index += 1) {
   await page.goto(url, { waitUntil: "domcontentloaded", timeout: 90000 });
   await page.waitForTimeout(5000);
 
-  const imageUrl = await page.evaluate(
+  const postBase = url.split("?")[0].replace(/\/$/, "");
+  const mediaUrl = `${postBase}/media/?size=l`;
+
+  let imageUrl = "";
+
+  try {
+    const mediaResponse = await page.request.get(mediaUrl, { timeout: 120_000 });
+    if (mediaResponse.ok() && (mediaResponse.headers()["content-type"] ?? "").includes("image")) {
+      const mediaBody = await mediaResponse.body();
+      if (mediaBody.length >= 8000) {
+        await writeFile(path.join(outputDir, filename), mediaBody);
+        console.log(`Saved ${filename} via media endpoint (${Math.round(mediaBody.length / 1024)} KB)`);
+        saved.push({ filename, label, src: `/portfolio/${filename}` });
+        continue;
+      }
+    }
+  } catch {
+    // Fall back to og:image below.
+  }
+
+  imageUrl = await page.evaluate(
     () => document.querySelector('meta[property="og:image"]')?.getAttribute("content") ?? "",
   );
 

@@ -184,7 +184,7 @@ export default async function HomePage() {
                   : {})}
                 className="btn-lift mt-8 inline-block rounded-full bg-gold px-7 py-3 text-sm font-medium tracking-[0.12em] text-espresso uppercase transition hover:bg-champagne"
               >
-                Book bridal session
+                Enquiry bridal session
               </a>
               </div>
             </Reveal>
