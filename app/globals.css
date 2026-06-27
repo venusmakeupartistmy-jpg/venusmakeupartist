@@ -96,6 +96,12 @@ body {
     opacity: 1 !important;
     transform: none !important;
   }
+
+  .gallery-grid > * {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
 }
 
 @keyframes fade-in-up {
@@ -181,7 +187,6 @@ body {
   transition:
     opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
     transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: opacity, transform;
 }
 
 .motion-from-up {
@@ -232,11 +237,20 @@ body {
 }
 
 .brand-marquee-track {
-  animation: brand-scroll 28s linear infinite;
+  animation: brand-scroll 32s linear infinite;
 }
 
 .brand-marquee-track:hover {
   animation-play-state: paused;
+}
+
+.brand-logo {
+  opacity: 0.72;
+  transition: opacity 0.25s ease;
+}
+
+.brand-logo-wrap:hover .brand-logo {
+  opacity: 1;
 }
 
 .btn-lift {
@@ -249,4 +263,78 @@ body {
 .btn-lift:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(26, 20, 16, 0.12);
+}
+
+/* Gallery — one observer, CSS stagger, hover only on fine pointers */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .gallery-grid {
+    gap: 1rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .gallery-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.gallery-grid > * {
+  opacity: 0;
+  transform: translate3d(0, 12px, 0);
+  transition:
+    opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.gallery-grid-visible > * {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.gallery-grid-visible > *:nth-child(1) {
+  transition-delay: 0ms;
+}
+.gallery-grid-visible > *:nth-child(2) {
+  transition-delay: 40ms;
+}
+.gallery-grid-visible > *:nth-child(3) {
+  transition-delay: 80ms;
+}
+.gallery-grid-visible > *:nth-child(4) {
+  transition-delay: 120ms;
+}
+.gallery-grid-visible > *:nth-child(5) {
+  transition-delay: 160ms;
+}
+.gallery-grid-visible > *:nth-child(6) {
+  transition-delay: 200ms;
+}
+
+.gallery-image {
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.gallery-card {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .gallery-card:hover .gallery-image {
+    transform: scale(1.04);
+  }
+
+  .gallery-card:hover .gallery-overlay {
+    background-color: rgba(26, 20, 16, 0.2);
+  }
+
+  .gallery-card:hover {
+    box-shadow: 0 12px 28px rgba(26, 20, 16, 0.14);
+  }
 }

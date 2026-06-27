@@ -6,10 +6,16 @@ import {
   isValidWhatsAppNumber,
   normalizeWhatsAppNumber,
 } from "@/lib/whatsapp";
+import {
+  mergeWebsitePackages,
+  normalizeWebsitePackages,
+  type WebsitePackage,
+} from "@/lib/website-packages";
 
 const PASSWORD_KEY = "admin_password_hash";
 const SERVICES_KEY = "service_presets";
 const WHATSAPP_KEY = "whatsapp_number";
+const WEBSITE_PACKAGES_KEY = "website_packages";
 
 async function getSetting<T>(key: string): Promise<T | null> {
   const supabase = createServiceClient();
@@ -92,6 +98,18 @@ export async function saveWhatsAppNumber(input: string) {
 
   await setSetting(WHATSAPP_KEY, normalized);
   return normalized;
+}
+
+export async function getWebsitePackages() {
+  noStore();
+  const stored = await getSetting<unknown>(WEBSITE_PACKAGES_KEY);
+  return mergeWebsitePackages(stored);
+}
+
+export async function saveWebsitePackages(input: unknown) {
+  const cleaned = normalizeWebsitePackages(input);
+  await setSetting(WEBSITE_PACKAGES_KEY, cleaned);
+  return cleaned;
 }
 
 export async function verifyAdminPassword(password: string) {

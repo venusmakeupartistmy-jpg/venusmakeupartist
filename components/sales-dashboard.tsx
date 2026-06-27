@@ -11,6 +11,7 @@ import {
 import { downloadSalesCsv } from "@/lib/export-sales";
 import type { Sale, SaleUpdateInput } from "@/lib/types";
 import { DEFAULT_SERVICES } from "@/lib/types";
+import { DEFAULT_WEBSITE_PACKAGES, type WebsitePackage } from "@/lib/website-packages";
 import { AdminLogoutButton } from "@/components/admin-login";
 import { AdminSettingsPanel } from "@/components/admin-settings-panel";
 import { SalesDateFilter } from "@/components/sales-date-filter";
@@ -23,6 +24,9 @@ export function SalesDashboard() {
   const [customTo, setCustomTo] = useState("");
   const [services, setServices] = useState<string[]>(DEFAULT_SERVICES);
   const [whatsappNumber, setWhatsappNumber] = useState("");
+  const [websitePackages, setWebsitePackages] = useState<WebsitePackage[]>(
+    DEFAULT_WEBSITE_PACKAGES,
+  );
   const [sales, setSales] = useState<Sale[]>([]);
   const [total, setTotal] = useState(0);
   const [count, setCount] = useState(0);
@@ -42,12 +46,16 @@ export function SalesDashboard() {
     const data = (await response.json()) as {
       services: string[];
       whatsappNumber?: string;
+      websitePackages?: WebsitePackage[];
     };
     if (data.services?.length) {
       setServices(data.services);
     }
     if (typeof data.whatsappNumber === "string") {
       setWhatsappNumber(data.whatsappNumber);
+    }
+    if (data.websitePackages?.length) {
+      setWebsitePackages(data.websitePackages);
     }
   }, []);
 
@@ -159,8 +167,10 @@ export function SalesDashboard() {
           <AdminSettingsPanel
             services={services}
             whatsappNumber={whatsappNumber}
+            websitePackages={websitePackages}
             onServicesUpdated={setServices}
             onWhatsAppUpdated={setWhatsappNumber}
+            onWebsitePackagesUpdated={setWebsitePackages}
           />
           <AdminLogoutButton />
         </div>

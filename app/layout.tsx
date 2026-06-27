@@ -16,7 +16,7 @@ const cormorant = Cormorant_Garamond({
 export const metadata: Metadata = {
   title: "Venus Makeup Artist | Kuala Lumpur",
   description:
-    "Personal, bridal, dinner and creative makeup styling by Venus. Based in Kuala Lumpur, Malaysia.",
+    "Professional bridal, ROM, and event makeup & hairdo services by Venus. Based in Kuala Lumpur, Malaysia.",
   metadataBase: new URL("https://venusmakeupartist.site"),
   icons: {
     icon: "/icon.png",
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Venus Makeup Artist",
     description:
-      "Personal, bridal, dinner and creative makeup styling in Kuala Lumpur.",
+      "Professional bridal, ROM, and event makeup & hairdo services in Kuala Lumpur.",
     url: "https://venusmakeupartist.site",
     siteName: "Venus Makeup Artist",
     type: "website",

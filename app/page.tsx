@@ -1,5 +1,6 @@
 import { INSTAGRAM_URL, SiteFooter, SiteHeader } from "@/components/site-header";
 import { BrandMarquee } from "@/components/brand-marquee";
+import { GalleryGrid } from "@/components/gallery-grid";
 import { PortfolioImage } from "@/components/portfolio-image";
 import { Reveal } from "@/components/reveal";
 import {
@@ -8,13 +9,12 @@ import {
   WhatsAppFloatingButton,
 } from "@/components/whatsapp-button";
 import {
-  BRIDAL_SERVICES,
   FAQ_ITEMS,
-  OTHER_SERVICES,
   TESTIMONIALS,
 } from "@/lib/site-content";
 import { portfolioImages } from "@/lib/portfolio";
-import { getWhatsAppNumber } from "@/lib/settings-server";
+import { getWebsitePackages, getWhatsAppNumber } from "@/lib/settings-server";
+import { packagesByCategory } from "@/lib/website-packages";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
 import Image from "next/image";
 
@@ -22,7 +22,12 @@ const feedImages = portfolioImages.slice(1);
 const heroImage = feedImages[0] ?? portfolioImages[0];
 
 export default async function HomePage() {
-  const whatsappNumber = await getWhatsAppNumber();
+  const [whatsappNumber, websitePackages] = await Promise.all([
+    getWhatsAppNumber(),
+    getWebsitePackages(),
+  ]);
+  const { bridal: bridalPackages, event: eventPackages } =
+    packagesByCategory(websitePackages);
   const bookingHref = whatsappNumber
     ? buildWhatsAppUrl(whatsappNumber)
     : "#contact";
@@ -46,15 +51,15 @@ export default async function HomePage() {
           <div className="absolute inset-0 bg-gradient-to-r from-espresso/95 via-espresso/75 to-espresso/40" />
           <div className="relative mx-auto flex min-h-[70vh] w-full min-w-0 max-w-6xl flex-col justify-center px-4 py-20 sm:min-h-[80vh] sm:py-28">
             <p className="animate-hero-in text-xs tracking-[0.25em] text-gold uppercase sm:text-sm">
-              Makeup artist · Kuala Lumpur
+              Makeup &amp; hairdo · Kuala Lumpur
             </p>
             <h1 className="animate-hero-in-delay-1 mt-4 max-w-2xl font-serif text-4xl leading-tight text-cream sm:text-5xl md:text-6xl lg:text-7xl">
               Beauty on demand
             </h1>
             <p className="animate-hero-in-delay-2 mt-5 max-w-xl text-sm leading-7 text-gold-light/90 sm:text-base sm:leading-8">
-              Venus Makeup Artist is your one-stop solution for bridal, event,
-              and creative makeup. Professional styling with skin-first artistry
-              and a warm, luminous finish.
+              Venus Makeup Artist specialises in professional makeup and hairdo
+              services — bridal, ROM, dinner, and event styling with skin-first
+              artistry and a finish that lasts all day.
             </p>
             <p className="animate-hero-in-delay-3 mt-4 text-sm text-gold-light/70">
               Available across Kuala Lumpur &amp; Klang Valley · Ready for travel
@@ -64,7 +69,7 @@ export default async function HomePage() {
                 href="#bridal"
                 className="btn-lift rounded-full bg-gold px-7 py-3 text-center text-sm font-medium tracking-[0.12em] text-espresso uppercase transition hover:bg-champagne"
               >
-                Bridal packages
+                Bridal makeup &amp; hairdo
               </a>
               {whatsappNumber ? (
                 <WhatsAppCta phone={whatsappNumber} variant="primary" />
@@ -98,19 +103,18 @@ export default async function HomePage() {
               <div className="min-w-0">
                 <p className="text-xs tracking-[0.25em] text-taupe uppercase">Welcome</p>
                 <h2 className="mt-3 font-serif text-3xl text-espresso sm:text-4xl md:text-5xl">
-                  Personalised makeup artistry you can trust
+                  Personalised makeup &amp; hairdo you can trust
                 </h2>
               <p className="mt-5 leading-8 text-mocha/85">
-                Venus brings extensive, personalised bridal makeup and hairstyling
-                to every client — catering to any theme, from soft natural glam to
-                full editorial looks. With exclusive on-location service across KL,
-                Venus is the artist to call when you want a skilled, trusted, and
-                truly personal experience.
+                Venus brings expert bridal makeup and hairstyling to every
+                client — from soft natural glam to polished evening looks. With
+                on-location service across KL, Venus is the artist to call when
+                you want skilled, trusted makeup and hairdo in one session.
               </p>
               <p className="mt-4 leading-8 text-mocha/85">
-                Every session starts with skin-first prep, customised tones for
-                your undertone, and a finish designed to last and photograph
-                beautifully.
+                Every appointment includes skin-first prep, customised tones for
+                your undertone, and a hairstyle designed to complement your
+                makeup and last through your event.
               </p>
               <a
                 href={whatsappNumber ? bookingHref : "#contact"}
@@ -155,15 +159,15 @@ export default async function HomePage() {
                 confident and beautiful on your special day.
               </p>
               <div className="mt-8 space-y-4">
-                {BRIDAL_SERVICES.map((service, index) => (
-                  <Reveal key={service.title} delay={index * 80} direction="up">
+                {bridalPackages.map((service, index) => (
+                  <Reveal key={service.id} delay={index * 80} direction="up">
                   <div className="border-b border-gold/15 pb-4 last:border-0">
                     <div className="flex flex-wrap items-baseline justify-between gap-2">
                       <h3 className="font-serif text-xl text-espresso">
                         {service.title}
                       </h3>
                       <span className="text-xs tracking-[0.12em] text-gold uppercase">
-                        {service.price}
+                        {service.priceLabel}
                       </span>
                     </div>
                     <p className="mt-2 text-sm leading-7 text-mocha/75">
@@ -193,20 +197,20 @@ export default async function HomePage() {
             <Reveal>
               <div className="max-w-2xl">
                 <p className="text-xs tracking-[0.25em] text-taupe uppercase">
-                  Other makeovers
+                  Event makeup &amp; hairdo
                 </p>
                 <h2 className="mt-3 font-serif text-3xl text-espresso sm:text-4xl md:text-5xl">
-                  Makeup for every occasion
+                  Makeup &amp; hairdo for every occasion
                 </h2>
                 <p className="mt-4 leading-7 text-mocha/80">
-                  From ROM ceremonies to dinner events and creative photoshoots —
-                  tailored styling for every moment.
+                  From ROM ceremonies to dinner events and bridesmaid styling —
+                  complete makeup and hairdo packages for every moment.
                 </p>
               </div>
             </Reveal>
             <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {OTHER_SERVICES.map((service, index) => (
-                <Reveal key={service.title} delay={index * 90}>
+              {eventPackages.map((service, index) => (
+                <Reveal key={service.id} delay={index * 90}>
                 <article
                   className="rounded-2xl border border-gold/15 bg-white/60 p-6 shadow-sm transition duration-300 hover:-translate-y-2 hover:border-gold/30 hover:shadow-lg"
                 >
@@ -218,7 +222,7 @@ export default async function HomePage() {
                     {service.description}
                   </p>
                   <p className="mt-5 text-xs tracking-[0.12em] text-gold uppercase">
-                    {service.price}
+                    {service.priceLabel}
                   </p>
                 </article>
                 </Reveal>
@@ -234,10 +238,10 @@ export default async function HomePage() {
               <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
               <div>
                 <p className="text-xs tracking-[0.25em] text-taupe uppercase">
-                  Bridal gallery
+                  Work gallery
                 </p>
                 <h2 className="mt-3 font-serif text-3xl text-espresso sm:text-4xl md:text-5xl">
-                  Recent work
+                  Makeup &amp; hairdo looks
                 </h2>
               </div>
               <a
@@ -250,18 +254,17 @@ export default async function HomePage() {
               </a>
               </div>
             </Reveal>
-            <div className="mt-10 grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4">
-              {feedImages.map((image, index) => (
-                <Reveal key={image.src} delay={index * 70}>
+            <GalleryGrid className="mt-10">
+              {feedImages.map((image) => (
                 <PortfolioImage
+                  key={image.src}
                   src={image.src}
                   alt={image.label}
                   label={image.label}
-                  className="aspect-[4/5] rounded-xl transition duration-300 hover:-translate-y-1 hover:shadow-lg"
+                  className="aspect-[4/5] rounded-xl"
                 />
-                </Reveal>
               ))}
-            </div>
+            </GalleryGrid>
           </div>
         </section>
 
@@ -339,11 +342,11 @@ export default async function HomePage() {
           <Reveal className="mx-auto w-full min-w-0 max-w-6xl px-4 text-center">
             <p className="text-xs tracking-[0.25em] text-gold uppercase">Contact</p>
             <h2 className="mt-3 font-serif text-3xl text-cream sm:text-4xl md:text-5xl">
-              Ready to book your makeover?
+              Ready to book makeup &amp; hairdo?
             </h2>
             <p className="mx-auto mt-5 max-w-2xl leading-8 text-gold-light/80">
               Message Venus on WhatsApp or Instagram to check availability, share
-              your event details, or book a trial session.
+              your event details, or book a bridal trial for makeup and hair.
             </p>
             {whatsappNumber ? (
               <p className="mt-4 text-sm text-gold-light/70">

@@ -5,23 +5,30 @@ import {
   ADMIN_API_LOGIN_PATH,
   ADMIN_LOGIN_PATH,
 } from "@/lib/admin-path";
+import { packagesByCategory, type WebsitePackage } from "@/lib/website-packages";
 
 type Props = {
   services: string[];
   whatsappNumber: string;
+  websitePackages: WebsitePackage[];
   onServicesUpdated: (services: string[]) => void;
   onWhatsAppUpdated: (whatsappNumber: string) => void;
+  onWebsitePackagesUpdated: (websitePackages: WebsitePackage[]) => void;
 };
 
 export function AdminSettingsPanel({
   services,
   whatsappNumber,
+  websitePackages,
   onServicesUpdated,
   onWhatsAppUpdated,
+  onWebsitePackagesUpdated,
 }: Props) {
   const [open, setOpen] = useState(false);
   const [draftServices, setDraftServices] = useState<string[]>(services);
   const [draftWhatsApp, setDraftWhatsApp] = useState(whatsappNumber);
+  const [draftWebsitePackages, setDraftWebsitePackages] =
+    useState<WebsitePackage[]>(websitePackages);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -29,11 +36,13 @@ export function AdminSettingsPanel({
   const [error, setError] = useState("");
   const [savingServices, setSavingServices] = useState(false);
   const [savingWhatsApp, setSavingWhatsApp] = useState(false);
+  const [savingWebsitePackages, setSavingWebsitePackages] = useState(false);
   const [savingPassword, setSavingPassword] = useState(false);
 
   function openPanel() {
     setDraftServices(services);
     setDraftWhatsApp(whatsappNumber);
+    setDraftWebsitePackages(websitePackages);
     setOpen(true);
     setMessage("");
     setError("");
@@ -52,6 +61,94 @@ export function AdminSettingsPanel({
   function removeService(index: number) {
     setDraftServices((current) => current.filter((_, itemIndex) => itemIndex !== index));
   }
+
+  function updateWebsitePackage(
+    id: string,
+    field: keyof Pick<WebsitePackage, "title" | "description" | "priceLabel">,
+    value: string,
+  ) {
+    setDraftWebsitePackages((current) =>
+      current.map((pkg) => (pkg.id === id ? { ...pkg, [field]: value } : pkg)),
+    );
+  }
+
+  async function saveWebsitePackages() {
+    setSavingWebsitePackages(true);
+    setMessage("");
+    setError("");
+
+    const response = await fetch("/api/settings", {
+      method: "PATCH",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ websitePackages: draftWebsitePackages }),
+    });
+
+    setSavingWebsitePackages(false);
+
+    if (!response.ok) {
+      const data = (await response.json()) as { error?: string };
+      setError(data.error ?? "Could not save website packages.");
+      return;
+    }
+
+    const data = (await response.json()) as { websitePackages: WebsitePackage[] };
+    onWebsitePackagesUpdated(data.websitePackages);
+    setDraftWebsitePackages(data.websitePackages);
+    setMessage("Website packages updated.");
+  }
+
+  function renderPackageFields(
+    label: string,
+    packages: WebsitePackage[],
+  ) {
+    return (
+      <div className="mt-6 space-y-4">
+        <p className="text-xs tracking-[0.15em] text-rose-700 uppercase">{label}</p>
+        {packages.map((pkg) => (
+          <div
+            key={pkg.id}
+            className="rounded-xl border border-rose-100 bg-rose-50/40 p-4"
+          >
+            <label className="block text-sm">
+              <span className="mb-2 block font-medium text-rose-950">Package name</span>
+              <input
+                value={pkg.title}
+                onChange={(event) =>
+                  updateWebsitePackage(pkg.id, "title", event.target.value)
+                }
+                className="w-full rounded-xl border border-rose-200 bg-white px-4 py-3 outline-none focus:ring-2 focus:ring-rose-300"
+              />
+            </label>
+            <label className="mt-3 block text-sm">
+              <span className="mb-2 block font-medium text-rose-950">Description</span>
+              <textarea
+                value={pkg.description}
+                onChange={(event) =>
+                  updateWebsitePackage(pkg.id, "description", event.target.value)
+                }
+                rows={3}
+                className="w-full resize-y rounded-xl border border-rose-200 bg-white px-4 py-3 outline-none focus:ring-2 focus:ring-rose-300"
+              />
+            </label>
+            <label className="mt-3 block text-sm">
+              <span className="mb-2 block font-medium text-rose-950">Price label</span>
+              <input
+                value={pkg.priceLabel}
+                onChange={(event) =>
+                  updateWebsitePackage(pkg.id, "priceLabel", event.target.value)
+                }
+                placeholder="From RM 450"
+                className="w-full rounded-xl border border-rose-200 bg-white px-4 py-3 outline-none focus:ring-2 focus:ring-rose-300"
+              />
+            </label>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  const { bridal, event } = packagesByCategory(draftWebsitePackages);
 
   async function saveServices() {
     setSavingServices(true);
@@ -243,6 +340,26 @@ export function AdminSettingsPanel({
                   {savingServices ? "Saving..." : "Save service names"}
                 </button>
               </div>
+            </section>
+
+            <section className="mt-10 border-t border-rose-100 pt-8">
+              <h3 className="font-serif text-2xl text-rose-950">Website packages</h3>
+              <p className="mt-1 text-sm text-rose-800/70">
+                Edit the package names, descriptions, and prices shown on your public
+                homepage.
+              </p>
+
+              {renderPackageFields("Bridal packages", bridal)}
+              {renderPackageFields("Event packages", event)}
+
+              <button
+                type="button"
+                onClick={() => void saveWebsitePackages()}
+                disabled={savingWebsitePackages}
+                className="mt-6 w-full rounded-xl bg-rose-900 px-4 py-3 text-sm font-medium text-white disabled:opacity-60 sm:w-auto"
+              >
+                {savingWebsitePackages ? "Saving..." : "Save website packages"}
+              </button>
             </section>
 
             <section className="mt-10 border-t border-rose-100 pt-8">

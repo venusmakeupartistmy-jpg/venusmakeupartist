@@ -122,8 +122,8 @@ export function SiteFooter({ whatsappNumber = "" }: { whatsappNumber?: string })
         <div>
           <p className="font-serif text-xl text-cream">Venus Makeup Artist</p>
           <p className="mt-3 text-sm leading-7 text-gold-light/75">
-            Professional makeup & hairdo services in Kuala Lumpur. Bridal,
-            event, and creative styling — available across the Klang Valley.
+            Professional makeup &amp; hairdo services in Kuala Lumpur. Bridal,
+            ROM, and event packages — available across the Klang Valley.
           </p>
         </div>
 
@@ -137,12 +137,12 @@ export function SiteFooter({ whatsappNumber = "" }: { whatsappNumber?: string })
             </li>
             <li>
               <a href="#bridal" className="transition hover:text-champagne">
-                Bridal trial session
+                Bridal trial (makeup &amp; hairdo)
               </a>
             </li>
             <li>
               <a href="#portfolio" className="transition hover:text-champagne">
-                Bridal gallery
+                Work gallery
               </a>
             </li>
             <li>
@@ -168,12 +168,12 @@ export function SiteFooter({ whatsappNumber = "" }: { whatsappNumber?: string })
             </li>
             <li>
               <a href="#services" className="transition hover:text-champagne">
-                Photoshoot & editorial
+                Bridesmaid makeup &amp; hairdo
               </a>
             </li>
             <li>
-              <a href="#about" className="transition hover:text-champagne">
-                About Venus
+              <a href="#services" className="transition hover:text-champagne">
+                Touch-up &amp; hair refresh
               </a>
             </li>
           </ul>

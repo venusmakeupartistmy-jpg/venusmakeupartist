@@ -22,14 +22,14 @@ export function PortfolioImage({
         src={src}
         alt={alt}
         fill
-        sizes="(max-width: 768px) 50vw, 33vw"
-        className="object-cover transition duration-500 group-hover:scale-105"
+        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 280px"
+        className="gallery-image object-cover"
       />
       {label ? (
         <>
-          <div className="absolute inset-0 bg-espresso/0 transition group-hover:bg-espresso/25" />
-          <div className="absolute inset-x-0 bottom-0 translate-y-full bg-gradient-to-t from-espresso/80 to-transparent p-4 transition group-hover:translate-y-0">
-            <p className="text-xs tracking-[0.2em] text-gold-light uppercase">
+          <div className="gallery-overlay absolute inset-0 bg-espresso/15 md:bg-espresso/0" />
+          <div className="gallery-caption absolute inset-x-0 bottom-0 bg-gradient-to-t from-espresso/85 via-espresso/40 to-transparent p-3 sm:p-4">
+            <p className="text-[0.65rem] tracking-[0.18em] text-gold-light uppercase sm:text-xs sm:tracking-[0.2em]">
               {label}
             </p>
           </div>
@@ -44,12 +44,16 @@ export function PortfolioImage({
         href={href}
         target="_blank"
         rel="noreferrer"
-        className={`group relative overflow-hidden ${className}`}
+        className={`gallery-card group relative block min-w-0 overflow-hidden ${className}`}
       >
         {image}
       </a>
     );
   }
 
-  return <div className={`relative overflow-hidden ${className}`}>{image}</div>;
+  return (
+    <div className={`gallery-card relative min-w-0 overflow-hidden ${className}`}>
+      {image}
+    </div>
+  );
 }

@@ -6,17 +6,17 @@ export const portfolioImages = [
   },
   {
     "filename": "ig-1.jpg",
-    "label": "Bridal glow",
+    "label": "Bridal makeup & hair",
     "src": "/portfolio/ig-1.jpg"
   },
   {
     "filename": "ig-2.jpg",
-    "label": "Soft glam",
+    "label": "Soft glam & hairdo",
     "src": "/portfolio/ig-2.jpg"
   },
   {
     "filename": "ig-3.jpg",
-    "label": "Editorial",
+    "label": "Evening glam",
     "src": "/portfolio/ig-3.jpg"
   },
   {
@@ -26,12 +26,12 @@ export const portfolioImages = [
   },
   {
     "filename": "ig-5.jpg",
-    "label": "Photoshoot",
+    "label": "Event hair & makeup",
     "src": "/portfolio/ig-5.jpg"
   },
   {
     "filename": "ig-6.jpg",
-    "label": "Event look",
+    "label": "Dinner makeup & hair",
     "src": "/portfolio/ig-6.jpg"
   }
 ] as const;

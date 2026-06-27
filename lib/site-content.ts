@@ -1,110 +1,49 @@
-export const BRIDAL_SERVICES = [
-  {
-    title: "Bridal makeup & hairdo",
-    description:
-      "Full bridal glam with luminous skin, soft sculpting, and a finish that photographs beautifully from ceremony to reception.",
-    price: "From RM 450",
-    href: "#contact",
-  },
-  {
-    title: "Bridal trial session",
-    description:
-      "A dedicated trial to refine your wedding-day look, tones, and hairstyle before the big day.",
-    price: "From RM 180",
-    href: "#contact",
-  },
-  {
-    title: "Bridal touch-up",
-    description:
-      "On-the-day touch-ups to keep your look fresh from solemnisation through evening reception.",
-    price: "From RM 120",
-    href: "#contact",
-  },
-];
-
-export const OTHER_SERVICES = [
-  {
-    title: "ROM & solemnisation",
-    description:
-      "Natural, polished makeup for registry and ceremony moments — elegant and camera-ready.",
-    price: "From RM 180",
-  },
-  {
-    title: "Dinner & event",
-    description:
-      "Soft glam to full evening looks for celebrations, dinners, and special occasions.",
-    price: "From RM 180",
-  },
-  {
-    title: "Photoshoot & editorial",
-    description:
-      "Creative and editorial styling with precise detail for campaigns and content creation.",
-    price: "From RM 220",
-  },
-  {
-    title: "Personal makeover",
-    description:
-      "One-on-one sessions tailored to your features, outfit, and the mood of your event.",
-    price: "From RM 180",
-  },
-];
-
 export const TESTIMONIALS = [
   {
     quote:
-      "Venus understood exactly the soft glam look I wanted for my wedding. The makeup lasted through the whole day and photographed beautifully.",
+      "Venus did my bridal makeup and hair exactly how I imagined — soft, glowing, and it lasted the whole day. The photos came out beautifully.",
     name: "Sarah L.",
-    event: "Bridal client",
+    event: "Bridal makeup & hairdo",
   },
   {
     quote:
-      "Professional, friendly, and so talented. She took time to match my undertone and the final look was even better than I imagined.",
+      "Professional and so talented with both makeup and hairstyling. She matched my undertone perfectly and the hairdo stayed in place all evening.",
     name: "Amira K.",
-    event: "Dinner makeup",
+    event: "Dinner makeup & hairdo",
   },
   {
     quote:
-      "Booked at short notice and Venus arrived on time with everything perfectly prepared. Lightweight makeup that still looked stunning on camera.",
+      "Booked at short notice for ROM. Venus arrived on time, did my makeup and hair quickly, and I felt so confident for the ceremony.",
     name: "Jessica T.",
-    event: "Event makeup",
+    event: "ROM makeup & hairdo",
   },
   {
     quote:
-      "The trial session made me feel so confident on my wedding day. Highly recommend Venus for bridal makeup in KL.",
+      "The bridal trial covered both makeup and hair — I felt completely ready for my wedding day. Highly recommend Venus in KL.",
     name: "Michelle C.",
     event: "Bridal trial",
   },
 ];
 
-export const BRANDS = [
-  "MAC",
-  "NARS",
-  "Charlotte Tilbury",
-  "Dior",
-  "Bobbi Brown",
-  "Huda Beauty",
-  "Fenty Beauty",
-  "Anastasia",
-  "Laura Mercier",
-  "Hourglass",
-  "Rare Beauty",
-  "Tarte",
-];
-
 export const FAQ_ITEMS = [
+  {
+    question: "Do packages include both makeup and hairdo?",
+    answer:
+      "Yes. Bridal and event packages include professional makeup and hairstyling. Touch-up and add-on services are also available — just mention your needs when booking.",
+  },
   {
     question: "Do you travel for appointments?",
     answer:
-      "Yes. On-location service is available across Kuala Lumpur and the Klang Valley. Travel fees may apply for locations outside KL.",
+      "Yes. On-location makeup and hairdo service is available across Kuala Lumpur and the Klang Valley. Travel fees may apply for locations outside KL.",
   },
   {
     question: "How do I book?",
     answer:
-      "Message Venus on WhatsApp or Instagram with your event date, location, and service needed. A deposit may be required to confirm your slot.",
+      "Message Venus on WhatsApp or Instagram with your event date, location, and the makeup & hairdo service you need. A deposit may be required to confirm your slot.",
   },
   {
     question: "Do you offer bridal trials?",
     answer:
-      "Yes. A bridal trial is recommended so we can perfect your look, tones, and hairstyle before your wedding day.",
+      "Yes. A bridal trial for makeup and hairdo is recommended so we can perfect your wedding-day look before the big day.",
   },
 ];
