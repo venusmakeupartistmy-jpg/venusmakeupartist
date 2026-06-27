@@ -245,7 +245,8 @@ body {
 }
 
 .brand-logo {
-  opacity: 0.72;
+  display: block;
+  opacity: 0.78;
   transition: opacity 0.25s ease;
 }
 

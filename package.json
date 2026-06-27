@@ -11,7 +11,8 @@
     "sync:instagram:chrome": "node scripts/sync-instagram-photos.mjs --use-system-chrome",
     "sync:instagram:cdp": "node scripts/sync-instagram-photos.mjs --cdp=http://127.0.0.1:9222",
     "sync:instagram:posts": "node scripts/sync-specific-posts.mjs",
-    "sync:instagram:posts:cdp": "node scripts/sync-specific-posts.mjs --cdp=http://127.0.0.1:9222"
+    "sync:instagram:posts:cdp": "node scripts/sync-specific-posts.mjs --cdp=http://127.0.0.1:9222",
+    "process:brand-logos": "node scripts/process-brand-logos.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.108.2",
@@ -27,6 +28,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.9",
     "playwright": "^1.61.1",
+    "sharp": "^0.35.2",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
