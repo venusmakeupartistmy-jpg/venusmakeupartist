@@ -4,7 +4,7 @@ import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
-const source = path.join(root, "public", "portfolio", "profile.jpg");
+const source = path.join(root, "public", "favicon-source.png");
 const appDir = path.join(root, "app");
 
 async function makeRoundIcon(outputFilename, size = 512) {
