@@ -23,7 +23,7 @@ export function PortfolioImage({
         alt={alt}
         fill
         sizes="(max-width: 768px) 50vw, 33vw"
-        className="object-cover"
+        className="object-cover transition duration-500 group-hover:scale-105"
       />
       {label ? (
         <>
