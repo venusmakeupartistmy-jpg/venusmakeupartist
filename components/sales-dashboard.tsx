@@ -130,16 +130,16 @@ export function SalesDashboard() {
   }
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10">
-      <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div>
-          <p className="text-sm uppercase tracking-[0.2em] text-rose-700">
+    <div className="mx-auto w-full min-w-0 max-w-6xl px-3 py-6 sm:px-4 sm:py-10">
+      <div className="mb-6 flex flex-col gap-4 sm:mb-8 md:flex-row md:items-center md:justify-between">
+        <div className="min-w-0">
+          <p className="text-xs uppercase tracking-[0.2em] text-rose-700 sm:text-sm">
             Live sales ledger
           </p>
-          <h1 className="font-serif text-3xl text-rose-950 sm:text-4xl">Venus Admin</h1>
-          <p className="mt-2 text-rose-800/70">{formatRangeLabel(range)}</p>
+          <h1 className="font-serif text-2xl text-rose-950 sm:text-3xl md:text-4xl">Venus Admin</h1>
+          <p className="mt-2 break-words text-sm text-rose-800/70">{formatRangeLabel(range)}</p>
         </div>
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:gap-3">
           <AdminSettingsPanel
             services={services}
             onServicesUpdated={setServices}
@@ -148,20 +148,20 @@ export function SalesDashboard() {
         </div>
       </div>
 
-      <div className="mb-8 grid gap-4 md:grid-cols-3">
-        <div className="rounded-3xl border border-rose-100 bg-white/80 p-6 shadow-sm">
+      <div className="mb-6 grid gap-3 sm:mb-8 sm:gap-4 md:grid-cols-3">
+        <div className="rounded-3xl border border-rose-100 bg-white/80 p-4 shadow-sm sm:p-6">
           <p className="text-sm text-rose-800/70">Period total</p>
-          <p className="mt-2 font-serif text-3xl text-rose-950">
+          <p className="mt-2 break-words font-serif text-2xl text-rose-950 sm:text-3xl">
             {formatMoney(total)}
           </p>
         </div>
-        <div className="rounded-3xl border border-rose-100 bg-white/80 p-6 shadow-sm">
+        <div className="rounded-3xl border border-rose-100 bg-white/80 p-4 shadow-sm sm:p-6">
           <p className="text-sm text-rose-800/70">Sales count</p>
-          <p className="mt-2 font-serif text-3xl text-rose-950">{count}</p>
+          <p className="mt-2 font-serif text-2xl text-rose-950 sm:text-3xl">{count}</p>
         </div>
-        <div className="rounded-3xl border border-rose-100 bg-white/80 p-6 shadow-sm">
+        <div className="rounded-3xl border border-rose-100 bg-white/80 p-4 shadow-sm sm:p-6">
           <p className="text-sm text-rose-800/70">Live status</p>
-          <p className="mt-2 font-serif text-3xl text-rose-950">
+          <p className="mt-2 font-serif text-2xl text-rose-950 sm:text-3xl">
             {loading ? "Syncing" : "Live"}
           </p>
           <p className="mt-2 text-xs text-rose-800/60">
@@ -189,9 +189,9 @@ export function SalesDashboard() {
         </a>
       </div>
 
-      <div className="grid gap-8 lg:grid-cols-[360px_1fr]">
+      <div className="grid min-w-0 gap-6 sm:gap-8 lg:grid-cols-[minmax(0,360px)_1fr]">
         <SalesForm services={services} onCreated={onCreated} />
-        <div>
+        <div className="min-w-0">
           {error ? <p className="mb-4 text-sm text-rose-700">{error}</p> : null}
           <SalesTable
             sales={sales}

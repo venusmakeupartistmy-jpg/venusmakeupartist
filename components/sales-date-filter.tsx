@@ -27,20 +27,20 @@ export function SalesDateFilter({
   onCustomToChange,
 }: Props) {
   return (
-    <div className="rounded-3xl border border-rose-100 bg-white/80 p-4 shadow-sm">
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-        <div>
+    <div className="rounded-3xl border border-rose-100 bg-white/80 p-4 shadow-sm sm:p-4">
+      <div className="flex flex-col gap-4">
+        <div className="min-w-0">
           <p className="text-sm font-medium text-rose-950">Date range</p>
-          <p className="mt-1 text-sm text-rose-800/70">{formatRangeLabel(range)}</p>
+          <p className="mt-1 break-words text-sm text-rose-800/70">{formatRangeLabel(range)}</p>
         </div>
 
-        <div className="flex flex-wrap gap-2">
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
           {PRESETS.map((preset) => (
             <button
               key={preset.value}
               type="button"
               onClick={() => onPresetChange(preset.value)}
-              className={`rounded-full px-4 py-2 text-sm transition ${
+              className={`rounded-full px-4 py-2.5 text-sm transition ${
                 range.preset === preset.value
                   ? "bg-rose-900 text-white"
                   : "border border-rose-200 text-rose-900 hover:bg-rose-50"

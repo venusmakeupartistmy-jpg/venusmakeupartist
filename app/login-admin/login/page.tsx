@@ -12,12 +12,12 @@ export default async function AdminLoginPage({
   const passwordUpdated = params.passwordUpdated === "1";
 
   return (
-    <main className="flex min-h-screen items-center justify-center px-4 py-10">
-      <div className="w-full max-w-md rounded-[2rem] border border-rose-100 bg-white/85 p-8 shadow-xl shadow-rose-100/50">
-        <p className="text-sm uppercase tracking-[0.2em] text-rose-700">
+    <main className="flex min-h-screen items-center justify-center px-4 py-8 sm:py-10">
+      <div className="w-full max-w-md rounded-[2rem] border border-rose-100 bg-white/85 p-6 shadow-xl shadow-rose-100/50 sm:p-8">
+        <p className="text-xs uppercase tracking-[0.2em] text-rose-700 sm:text-sm">
           Venus Admin
         </p>
-        <h1 className="mt-3 font-serif text-3xl text-rose-950">Sign in</h1>
+        <h1 className="mt-3 font-serif text-2xl text-rose-950 sm:text-3xl">Sign in</h1>
         <p className="mt-2 text-sm text-rose-800/70">
           Access your live sales ledger and record new bookings.
         </p>

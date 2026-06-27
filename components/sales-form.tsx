@@ -70,9 +70,9 @@ export function SalesForm({ services, onCreated }: Props) {
   return (
     <form
       onSubmit={onSubmit}
-      className="rounded-3xl border border-rose-100 bg-white/80 p-6 shadow-sm backdrop-blur"
+      className="min-w-0 rounded-3xl border border-rose-100 bg-white/80 p-4 shadow-sm backdrop-blur sm:p-6"
     >
-      <h2 className="font-serif text-2xl text-rose-950">Record a sale</h2>
+      <h2 className="font-serif text-xl text-rose-950 sm:text-2xl">Record a sale</h2>
       <p className="mt-1 text-sm text-rose-800/70">
         New entries appear instantly in your live ledger.
       </p>
@@ -165,7 +165,7 @@ export function SalesForm({ services, onCreated }: Props) {
       <button
         type="submit"
         disabled={loading}
-        className="mt-6 rounded-xl bg-rose-900 px-5 py-3 font-medium text-white transition hover:bg-rose-800 disabled:opacity-60"
+        className="mt-6 w-full rounded-xl bg-rose-900 px-5 py-3 font-medium text-white transition hover:bg-rose-800 disabled:opacity-60 sm:w-auto"
       >
         {loading ? "Saving..." : "Add sale"}
       </button>

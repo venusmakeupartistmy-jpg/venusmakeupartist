@@ -16,8 +16,8 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-espresso/80 backdrop-blur-md">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
-        <Link href="/" className="font-serif text-2xl tracking-wide text-cream">
+      <div className="mx-auto flex w-full min-w-0 max-w-6xl items-center justify-between px-4 py-3 sm:py-4">
+        <Link href="/" className="font-serif text-xl tracking-wide text-cream sm:text-2xl">
           Venus<span className="text-gold-gradient">.</span>
         </Link>
 
@@ -82,9 +82,9 @@ export function SiteHeader() {
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-gold/15 bg-espresso px-4 py-10 text-center">
-      <p className="font-serif text-2xl text-cream">Venus Makeup Artist</p>
-      <p className="mt-2 text-sm tracking-[0.2em] text-taupe uppercase">
+    <footer className="border-t border-gold/15 bg-espresso px-4 py-8 text-center sm:py-10">
+      <p className="font-serif text-xl text-cream sm:text-2xl">Venus Makeup Artist</p>
+      <p className="mt-2 text-xs tracking-[0.15em] text-taupe uppercase sm:text-sm sm:tracking-[0.2em]">
         Kuala Lumpur, Malaysia
       </p>
       <a

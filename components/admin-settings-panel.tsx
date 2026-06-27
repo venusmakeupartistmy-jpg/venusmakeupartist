@@ -124,21 +124,21 @@ export function AdminSettingsPanel({ services, onServicesUpdated }: Props) {
       </button>
 
       {open ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-espresso/40 px-4 py-8">
-          <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-[2rem] border border-rose-100 bg-white p-6 shadow-2xl">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <p className="text-sm uppercase tracking-[0.2em] text-rose-700">
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-espresso/40 p-0 sm:items-center sm:p-4 sm:py-8">
+          <div className="max-h-[92vh] w-full max-w-2xl overflow-y-auto rounded-t-[2rem] border border-rose-100 bg-white p-4 shadow-2xl sm:rounded-[2rem] sm:p-6">
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <p className="text-xs uppercase tracking-[0.2em] text-rose-700 sm:text-sm">
                   Settings
                 </p>
-                <h2 className="mt-2 font-serif text-3xl text-rose-950">
+                <h2 className="mt-2 font-serif text-2xl text-rose-950 sm:text-3xl">
                   Dashboard preferences
                 </h2>
               </div>
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                className="rounded-full border border-rose-200 px-3 py-1 text-sm text-rose-800"
+                className="shrink-0 rounded-full border border-rose-200 px-3 py-1 text-sm text-rose-800"
               >
                 Close
               </button>
@@ -155,18 +155,18 @@ export function AdminSettingsPanel({ services, onServicesUpdated }: Props) {
 
               <div className="mt-4 space-y-3">
                 {draftServices.map((service, index) => (
-                  <div key={`service-${index}`} className="flex gap-2">
+                  <div key={`service-${index}`} className="flex flex-col gap-2 sm:flex-row">
                     <input
                       value={service}
                       onChange={(event) => updateService(index, event.target.value)}
-                      className="flex-1 rounded-xl border border-rose-200 px-4 py-3 outline-none focus:ring-2 focus:ring-rose-300"
+                      className="min-w-0 flex-1 rounded-xl border border-rose-200 px-4 py-3 outline-none focus:ring-2 focus:ring-rose-300"
                       placeholder="Service name"
                     />
                     <button
                       type="button"
                       onClick={() => removeService(index)}
                       disabled={draftServices.length <= 1}
-                      className="rounded-xl border border-rose-200 px-4 py-3 text-sm text-rose-800 disabled:opacity-40"
+                      className="rounded-xl border border-rose-200 px-4 py-3 text-sm text-rose-800 disabled:opacity-40 sm:shrink-0"
                     >
                       Remove
                     </button>
@@ -174,11 +174,11 @@ export function AdminSettingsPanel({ services, onServicesUpdated }: Props) {
                 ))}
               </div>
 
-              <div className="mt-4 flex flex-wrap gap-3">
+              <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <button
                   type="button"
                   onClick={addService}
-                  className="rounded-xl border border-rose-200 px-4 py-3 text-sm text-rose-900"
+                  className="w-full rounded-xl border border-rose-200 px-4 py-3 text-sm text-rose-900 sm:w-auto"
                 >
                   Add service
                 </button>
@@ -186,7 +186,7 @@ export function AdminSettingsPanel({ services, onServicesUpdated }: Props) {
                   type="button"
                   onClick={() => void saveServices()}
                   disabled={savingServices}
-                  className="rounded-xl bg-rose-900 px-4 py-3 text-sm font-medium text-white disabled:opacity-60"
+                  className="w-full rounded-xl bg-rose-900 px-4 py-3 text-sm font-medium text-white disabled:opacity-60 sm:w-auto"
                 >
                   {savingServices ? "Saving..." : "Save service names"}
                 </button>
@@ -241,7 +241,7 @@ export function AdminSettingsPanel({ services, onServicesUpdated }: Props) {
                 type="button"
                 onClick={() => void savePassword()}
                 disabled={savingPassword}
-                className="mt-4 rounded-xl bg-rose-900 px-4 py-3 text-sm font-medium text-white disabled:opacity-60"
+                className="mt-4 w-full rounded-xl bg-rose-900 px-4 py-3 text-sm font-medium text-white disabled:opacity-60 sm:w-auto"
               >
                 {savingPassword ? "Updating..." : "Update password"}
               </button>
