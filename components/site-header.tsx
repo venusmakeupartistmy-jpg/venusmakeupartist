@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { WhatsAppContactLine } from "@/components/whatsapp-button";
 
 const INSTAGRAM_URL = "https://www.instagram.com/venusss_makeupartist/";
 
@@ -80,21 +81,24 @@ export function SiteHeader() {
   );
 }
 
-export function SiteFooter() {
+export function SiteFooter({ whatsappNumber = "" }: { whatsappNumber?: string }) {
   return (
     <footer className="border-t border-gold/15 bg-espresso px-4 py-8 text-center sm:py-10">
       <p className="font-serif text-xl text-cream sm:text-2xl">Venus Makeup Artist</p>
       <p className="mt-2 text-xs tracking-[0.15em] text-taupe uppercase sm:text-sm sm:tracking-[0.2em]">
         Kuala Lumpur, Malaysia
       </p>
-      <a
-        href={INSTAGRAM_URL}
-        target="_blank"
-        rel="noreferrer"
-        className="mt-5 inline-block text-sm tracking-[0.15em] text-gold uppercase transition hover:text-champagne"
-      >
-        @venusss_makeupartist
-      </a>
+      <div className="mt-5 flex flex-col items-center gap-3">
+        {whatsappNumber ? <WhatsAppContactLine phone={whatsappNumber} /> : null}
+        <a
+          href={INSTAGRAM_URL}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-block text-sm tracking-[0.15em] text-gold uppercase transition hover:text-champagne"
+        >
+          @venusss_makeupartist
+        </a>
+      </div>
     </footer>
   );
 }

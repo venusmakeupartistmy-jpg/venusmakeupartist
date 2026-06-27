@@ -8,22 +8,32 @@ import {
 
 type Props = {
   services: string[];
+  whatsappNumber: string;
   onServicesUpdated: (services: string[]) => void;
+  onWhatsAppUpdated: (whatsappNumber: string) => void;
 };
 
-export function AdminSettingsPanel({ services, onServicesUpdated }: Props) {
+export function AdminSettingsPanel({
+  services,
+  whatsappNumber,
+  onServicesUpdated,
+  onWhatsAppUpdated,
+}: Props) {
   const [open, setOpen] = useState(false);
   const [draftServices, setDraftServices] = useState<string[]>(services);
+  const [draftWhatsApp, setDraftWhatsApp] = useState(whatsappNumber);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [savingServices, setSavingServices] = useState(false);
+  const [savingWhatsApp, setSavingWhatsApp] = useState(false);
   const [savingPassword, setSavingPassword] = useState(false);
 
   function openPanel() {
     setDraftServices(services);
+    setDraftWhatsApp(whatsappNumber);
     setOpen(true);
     setMessage("");
     setError("");
@@ -67,6 +77,32 @@ export function AdminSettingsPanel({ services, onServicesUpdated }: Props) {
     onServicesUpdated(data.services);
     setDraftServices(data.services);
     setMessage("Service names updated.");
+  }
+
+  async function saveWhatsApp() {
+    setSavingWhatsApp(true);
+    setMessage("");
+    setError("");
+
+    const response = await fetch("/api/settings", {
+      method: "PATCH",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ whatsappNumber: draftWhatsApp }),
+    });
+
+    setSavingWhatsApp(false);
+
+    if (!response.ok) {
+      const data = (await response.json()) as { error?: string };
+      setError(data.error ?? "Could not save WhatsApp number.");
+      return;
+    }
+
+    const data = (await response.json()) as { whatsappNumber: string };
+    onWhatsAppUpdated(data.whatsappNumber);
+    setDraftWhatsApp(data.whatsappNumber);
+    setMessage("WhatsApp number updated.");
   }
 
   async function savePassword() {
@@ -207,6 +243,34 @@ export function AdminSettingsPanel({ services, onServicesUpdated }: Props) {
                   {savingServices ? "Saving..." : "Save service names"}
                 </button>
               </div>
+            </section>
+
+            <section className="mt-10 border-t border-rose-100 pt-8">
+              <h3 className="font-serif text-2xl text-rose-950">WhatsApp number</h3>
+              <p className="mt-1 text-sm text-rose-800/70">
+                Shown on your public website for booking enquiries. Use country
+                code without + (e.g. 60123456789). Leave blank to hide the button.
+              </p>
+
+              <label className="mt-4 block text-sm">
+                <span className="mb-2 block font-medium text-rose-950">Number</span>
+                <input
+                  value={draftWhatsApp}
+                  onChange={(event) => setDraftWhatsApp(event.target.value)}
+                  className="w-full rounded-xl border border-rose-200 px-4 py-3 outline-none focus:ring-2 focus:ring-rose-300"
+                  placeholder="60123456789"
+                  inputMode="tel"
+                />
+              </label>
+
+              <button
+                type="button"
+                onClick={() => void saveWhatsApp()}
+                disabled={savingWhatsApp}
+                className="mt-4 w-full rounded-xl bg-rose-900 px-4 py-3 text-sm font-medium text-white disabled:opacity-60 sm:w-auto"
+              >
+                {savingWhatsApp ? "Saving..." : "Save WhatsApp number"}
+              </button>
             </section>
 
             <section className="mt-10 border-t border-rose-100 pt-8">

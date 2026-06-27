@@ -20,6 +20,9 @@ type Props = {
   onUpdate: (id: string, input: SaleUpdateInput) => Promise<boolean>;
 };
 
+const inputClass =
+  "w-full rounded-lg border border-rose-200 px-2 py-1.5 text-sm outline-none focus:ring-1 focus:ring-rose-300";
+
 function SaleEditor({
   sale,
   services,
@@ -33,12 +36,13 @@ function SaleEditor({
   onSave: (input: SaleUpdateInput) => void;
   onCancel: () => void;
 }) {
+  const isCustomService = !services.includes(sale.service);
   const [clientName, setClientName] = useState(sale.client_name);
   const [service, setService] = useState(
-    services.includes(sale.service) ? sale.service : sale.service || services[0],
+    isCustomService ? "custom" : sale.service || services[0],
   );
   const [customService, setCustomService] = useState(
-    services.includes(sale.service) ? "" : sale.service,
+    isCustomService ? sale.service : "",
   );
   const [amount, setAmount] = useState(String(sale.amount));
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(
@@ -46,12 +50,10 @@ function SaleEditor({
   );
   const [notes, setNotes] = useState(sale.notes);
   const [soldAt, setSoldAt] = useState(toDatetimeLocalValue(sale.sold_at));
-  const [useCustomService, setUseCustomService] = useState(
-    !services.includes(sale.service),
-  );
 
   function handleSave() {
-    const resolvedService = useCustomService ? customService.trim() : service;
+    const resolvedService =
+      service === "custom" ? customService.trim() : service;
 
     onSave({
       client_name: clientName,
@@ -64,78 +66,38 @@ function SaleEditor({
   }
 
   return (
-    <div className="space-y-3 rounded-2xl border border-rose-100 bg-rose-50/40 p-3 sm:p-4">
-      <label className="block text-sm">
-        <span className="mb-1 block font-medium text-rose-950">Date & time</span>
-        <input
-          type="datetime-local"
-          value={soldAt}
-          onChange={(event) => setSoldAt(event.target.value)}
-          className="w-full rounded-xl border border-rose-200 px-3 py-2 outline-none focus:ring-2 focus:ring-rose-300"
-        />
-      </label>
-
-      <label className="block text-sm">
-        <span className="mb-1 block font-medium text-rose-950">Client name</span>
-        <input
-          value={clientName}
-          onChange={(event) => setClientName(event.target.value)}
-          className="w-full rounded-xl border border-rose-200 px-3 py-2 outline-none focus:ring-2 focus:ring-rose-300"
-          placeholder="Optional"
-        />
-      </label>
-
-      <label className="block text-sm">
-        <span className="mb-1 block font-medium text-rose-950">Service</span>
-        {useCustomService ? (
+    <div className="rounded-xl border border-rose-100 bg-rose-50/50 p-2">
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+        <label className="col-span-2 block text-xs sm:col-span-1">
+          <span className="mb-0.5 block text-rose-800/60">Date</span>
           <input
-            value={customService}
-            onChange={(event) => setCustomService(event.target.value)}
-            className="w-full rounded-xl border border-rose-200 px-3 py-2 outline-none focus:ring-2 focus:ring-rose-300"
+            type="datetime-local"
+            value={soldAt}
+            onChange={(event) => setSoldAt(event.target.value)}
+            className={inputClass}
           />
-        ) : (
-          <select
-            value={service}
-            onChange={(event) => setService(event.target.value)}
-            className="w-full rounded-xl border border-rose-200 px-3 py-2 outline-none focus:ring-2 focus:ring-rose-300"
-          >
-            {services.map((item) => (
-              <option key={item} value={item}>
-                {item}
-              </option>
-            ))}
-          </select>
-        )}
-        <button
-          type="button"
-          onClick={() => setUseCustomService((current) => !current)}
-          className="mt-2 text-xs text-rose-700 underline-offset-2 hover:underline"
-        >
-          {useCustomService ? "Use preset service" : "Use custom service"}
-        </button>
-      </label>
+        </label>
 
-      <div className="grid gap-3 sm:grid-cols-2">
-        <label className="block text-sm">
-          <span className="mb-1 block font-medium text-rose-950">Amount (MYR)</span>
+        <label className="block text-xs">
+          <span className="mb-0.5 block text-rose-800/60">Amount</span>
           <input
             type="number"
             min="0"
             step="0.01"
             value={amount}
             onChange={(event) => setAmount(event.target.value)}
-            className="w-full rounded-xl border border-rose-200 px-3 py-2 outline-none focus:ring-2 focus:ring-rose-300"
+            className={inputClass}
           />
         </label>
 
-        <label className="block text-sm">
-          <span className="mb-1 block font-medium text-rose-950">Payment</span>
+        <label className="block text-xs">
+          <span className="mb-0.5 block text-rose-800/60">Payment</span>
           <select
             value={paymentMethod}
             onChange={(event) =>
               setPaymentMethod(event.target.value as PaymentMethod)
             }
-            className="w-full rounded-xl border border-rose-200 px-3 py-2 outline-none focus:ring-2 focus:ring-rose-300"
+            className={inputClass}
           >
             {PAYMENT_METHODS.map((item) => (
               <option key={item.value} value={item.value}>
@@ -144,32 +106,70 @@ function SaleEditor({
             ))}
           </select>
         </label>
+
+        <label className="col-span-2 block text-xs sm:col-span-1">
+          <span className="mb-0.5 block text-rose-800/60">Client</span>
+          <input
+            value={clientName}
+            onChange={(event) => setClientName(event.target.value)}
+            className={inputClass}
+            placeholder="Optional"
+          />
+        </label>
+
+        <label className="col-span-2 block text-xs sm:col-span-2">
+          <span className="mb-0.5 block text-rose-800/60">Service</span>
+          <select
+            value={service}
+            onChange={(event) => setService(event.target.value)}
+            className={inputClass}
+          >
+            {services.map((item) => (
+              <option key={item} value={item}>
+                {item}
+              </option>
+            ))}
+            <option value="custom">Custom</option>
+          </select>
+        </label>
+
+        {service === "custom" ? (
+          <label className="col-span-2 block text-xs">
+            <span className="mb-0.5 block text-rose-800/60">Custom name</span>
+            <input
+              value={customService}
+              onChange={(event) => setCustomService(event.target.value)}
+              className={inputClass}
+            />
+          </label>
+        ) : null}
+
+        <label className="col-span-2 block text-xs sm:col-span-4">
+          <span className="mb-0.5 block text-rose-800/60">Notes</span>
+          <input
+            value={notes}
+            onChange={(event) => setNotes(event.target.value)}
+            className={inputClass}
+            placeholder="Optional"
+          />
+        </label>
       </div>
 
-      <label className="block text-sm">
-        <span className="mb-1 block font-medium text-rose-950">Notes</span>
-        <textarea
-          value={notes}
-          onChange={(event) => setNotes(event.target.value)}
-          className="min-h-20 w-full rounded-xl border border-rose-200 px-3 py-2 outline-none focus:ring-2 focus:ring-rose-300"
-        />
-      </label>
-
-      <div className="flex flex-wrap gap-3">
+      <div className="mt-2 flex justify-end gap-2">
+        <button
+          type="button"
+          onClick={onCancel}
+          className="rounded-lg px-2.5 py-1 text-xs text-rose-800 hover:bg-rose-100"
+        >
+          Cancel
+        </button>
         <button
           type="button"
           onClick={handleSave}
           disabled={saving}
-          className="rounded-xl bg-rose-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
+          className="rounded-lg bg-rose-900 px-2.5 py-1 text-xs font-medium text-white disabled:opacity-60"
         >
-          {saving ? "Saving..." : "Save changes"}
-        </button>
-        <button
-          type="button"
-          onClick={onCancel}
-          className="rounded-xl border border-rose-200 px-4 py-2 text-sm text-rose-800"
-        >
-          Cancel
+          {saving ? "Saving..." : "Save"}
         </button>
       </div>
     </div>
@@ -286,7 +286,7 @@ export function SalesTable({ sales, services, onDelete, onUpdate }: Props) {
               {sales.map((sale) => (
                 <tr key={sale.id} className="border-t border-rose-100 align-top">
                   {editingId === sale.id ? (
-                    <td colSpan={7} className="px-4 py-4">
+                    <td colSpan={7} className="px-3 py-2">
                       <SaleEditor
                         sale={sale}
                         services={services}

@@ -1,6 +1,13 @@
 import { INSTAGRAM_URL, SiteFooter, SiteHeader } from "@/components/site-header";
 import { PortfolioImage } from "@/components/portfolio-image";
+import {
+  WhatsAppContactLine,
+  WhatsAppCta,
+  WhatsAppFloatingButton,
+} from "@/components/whatsapp-button";
 import { portfolioImages } from "@/lib/portfolio";
+import { getWhatsAppNumber } from "@/lib/settings-server";
+import { buildWhatsAppUrl } from "@/lib/whatsapp";
 import Image from "next/image";
 
 const services = [
@@ -27,10 +34,16 @@ const services = [
 const profileImage = portfolioImages[0];
 const feedImages = portfolioImages.slice(1);
 
-export default function HomePage() {
+export default async function HomePage() {
+  const whatsappNumber = await getWhatsAppNumber();
+  const bookingHref = whatsappNumber
+    ? buildWhatsAppUrl(whatsappNumber)
+    : "#contact";
+
   return (
     <>
       <SiteHeader />
+      {whatsappNumber ? <WhatsAppFloatingButton phone={whatsappNumber} /> : null}
       <main className="min-w-0 overflow-x-hidden">
         <section className="relative overflow-hidden bg-editorial-glow">
           <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(212,184,150,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(212,184,150,0.08)_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-30" />
@@ -59,7 +72,10 @@ export default function HomePage() {
                   View Instagram
                 </a>
                 <a
-                  href="#contact"
+                  href={bookingHref}
+                  {...(whatsappNumber
+                    ? { target: "_blank", rel: "noopener noreferrer" }
+                    : {})}
                   className="rounded-full border border-gold/35 px-6 py-3 text-center text-sm font-medium tracking-[0.12em] text-gold-light uppercase transition hover:border-gold hover:bg-white/5 sm:px-7"
                 >
                   Book a session
@@ -227,8 +243,8 @@ export default function HomePage() {
                 Ready for your next look?
               </h2>
               <p className="mt-5 max-w-2xl leading-8 text-gold-light/80">
-                DM Venus on Instagram to check availability, share your event
-                details, or book a trial session. Follow{" "}
+                Message Venus on WhatsApp or Instagram to check availability,
+                share your event details, or book a trial session. Follow{" "}
                 <a
                   href={INSTAGRAM_URL}
                   target="_blank"
@@ -239,7 +255,16 @@ export default function HomePage() {
                 </a>{" "}
                 for the latest bridal, dinner, and creative work.
               </p>
+              {whatsappNumber ? (
+                <p className="mt-4 text-sm text-gold-light/70">
+                  WhatsApp:{" "}
+                  <WhatsAppContactLine phone={whatsappNumber} />
+                </p>
+              ) : null}
               <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4">
+                {whatsappNumber ? (
+                  <WhatsAppCta phone={whatsappNumber} variant="primary" />
+                ) : null}
                 <a
                   href={INSTAGRAM_URL}
                   target="_blank"
@@ -261,7 +286,7 @@ export default function HomePage() {
           </div>
         </section>
       </main>
-      <SiteFooter />
+      <SiteFooter whatsappNumber={whatsappNumber} />
     </>
   );
 }

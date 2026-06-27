@@ -22,6 +22,7 @@ export function SalesDashboard() {
   const [customFrom, setCustomFrom] = useState("");
   const [customTo, setCustomTo] = useState("");
   const [services, setServices] = useState<string[]>(DEFAULT_SERVICES);
+  const [whatsappNumber, setWhatsappNumber] = useState("");
   const [sales, setSales] = useState<Sale[]>([]);
   const [total, setTotal] = useState(0);
   const [count, setCount] = useState(0);
@@ -38,9 +39,15 @@ export function SalesDashboard() {
     const response = await fetch("/api/settings", { cache: "no-store" });
     if (!response.ok) return;
 
-    const data = (await response.json()) as { services: string[] };
+    const data = (await response.json()) as {
+      services: string[];
+      whatsappNumber?: string;
+    };
     if (data.services?.length) {
       setServices(data.services);
+    }
+    if (typeof data.whatsappNumber === "string") {
+      setWhatsappNumber(data.whatsappNumber);
     }
   }, []);
 
@@ -151,7 +158,9 @@ export function SalesDashboard() {
         <div className="flex shrink-0 items-center gap-2">
           <AdminSettingsPanel
             services={services}
+            whatsappNumber={whatsappNumber}
             onServicesUpdated={setServices}
+            onWhatsAppUpdated={setWhatsappNumber}
           />
           <AdminLogoutButton />
         </div>
