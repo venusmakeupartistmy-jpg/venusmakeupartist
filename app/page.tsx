@@ -50,13 +50,13 @@ export default async function HomePage() {
           />
           <div className="absolute inset-0 bg-gradient-to-r from-espresso/95 via-espresso/75 to-espresso/40" />
           <div className="relative mx-auto flex min-h-[70vh] w-full min-w-0 max-w-6xl flex-col justify-center px-4 py-20 sm:min-h-[80vh] sm:py-28">
-            <p className="animate-hero-in text-xs tracking-[0.25em] text-gold uppercase sm:text-sm">
+            <p className="type-eyebrow animate-hero-in text-gold">
               Makeup &amp; hairdo · Kuala Lumpur
             </p>
-            <h1 className="animate-hero-in-delay-1 mt-4 max-w-2xl font-serif text-4xl leading-tight text-cream sm:text-5xl md:text-6xl lg:text-7xl">
+            <h1 className="type-display animate-hero-in-delay-1 mt-4 max-w-2xl text-4xl text-cream sm:text-5xl md:text-6xl lg:text-7xl">
               Beauty on demand
             </h1>
-            <p className="animate-hero-in-delay-2 mt-5 max-w-xl text-sm leading-7 text-gold-light/90 sm:text-base sm:leading-8">
+            <p className="type-body animate-hero-in-delay-2 mt-5 max-w-xl text-sm text-gold-light/90 sm:text-base">
               Venus Makeup Artist specialises in professional makeup and hairdo
               services — bridal, ROM, dinner, and event styling with skin-first
               artistry and a finish that lasts all day.
@@ -64,10 +64,10 @@ export default async function HomePage() {
             <p className="animate-hero-in-delay-3 mt-4 text-sm text-gold-light/70">
               Available across Kuala Lumpur &amp; Klang Valley · Ready for travel
             </p>
-            <div className="animate-hero-in-delay-4 mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <div className="animate-hero-in-delay-4 mt-8 flex flex-col items-start gap-3 sm:flex-row sm:flex-wrap">
               <a
                 href="#bridal"
-                className="btn-lift rounded-full bg-gold px-7 py-3 text-center text-sm font-medium tracking-[0.12em] text-espresso uppercase transition hover:bg-champagne"
+                className="btn-lift w-fit max-w-[13.5rem] rounded-full bg-gold px-4 py-2.5 text-center text-xs leading-snug font-medium tracking-[0.06em] text-espresso uppercase transition hover:bg-champagne sm:max-w-none sm:px-7 sm:py-3 sm:text-sm sm:leading-normal sm:tracking-[0.12em]"
               >
                 Bridal makeup &amp; hairdo
               </a>
@@ -76,7 +76,7 @@ export default async function HomePage() {
               ) : (
                 <a
                   href="#contact"
-                  className="rounded-full bg-[#25D366] px-7 py-3 text-center text-sm font-medium tracking-[0.12em] text-white uppercase"
+                  className="w-fit rounded-full bg-[#25D366] px-5 py-2.5 text-center text-xs font-medium tracking-[0.08em] text-white uppercase sm:px-7 sm:py-3 sm:text-sm sm:tracking-[0.12em]"
                 >
                   WhatsApp
                 </a>
@@ -101,17 +101,17 @@ export default async function HomePage() {
             </Reveal>
             <Reveal direction="right" delay={120}>
               <div className="min-w-0">
-                <p className="text-xs tracking-[0.25em] text-taupe uppercase">Welcome</p>
-                <h2 className="mt-3 font-serif text-3xl text-espresso sm:text-4xl md:text-5xl">
+                <p className="type-eyebrow text-taupe">Welcome</p>
+                <h2 className="type-section-title mt-3 text-3xl text-espresso sm:text-4xl md:text-5xl">
                   Personalised makeup &amp; hairdo you can trust
                 </h2>
-              <p className="mt-5 leading-8 text-mocha/85">
+              <p className="type-body mt-5 text-mocha/85">
                 Venus brings expert bridal makeup and hairstyling to every
                 client — from soft natural glam to polished evening looks. With
                 on-location service across KL, Venus is the artist to call when
                 you want skilled, trusted makeup and hairdo in one session.
               </p>
-              <p className="mt-4 leading-8 text-mocha/85">
+              <p className="type-body mt-4 text-mocha/85">
                 Every appointment includes skin-first prep, customised tones for
                 your undertone, and a hairstyle designed to complement your
                 makeup and last through your event.
@@ -146,13 +146,13 @@ export default async function HomePage() {
             </Reveal>
             <Reveal direction="left" delay={120} className="min-w-0 md:order-1">
               <div>
-              <p className="text-xs tracking-[0.25em] text-taupe uppercase">
+              <p className="type-eyebrow text-taupe">
                 Bridal makeup &amp; hairdo
               </p>
-              <h2 className="mt-3 font-serif text-3xl text-espresso sm:text-4xl md:text-5xl">
+              <h2 className="type-section-title mt-3 text-3xl text-espresso sm:text-4xl md:text-5xl">
                 Your wedding day deserves the perfect look
               </h2>
-              <p className="mt-5 leading-8 text-mocha/85">
+              <p className="type-body mt-5 text-mocha/85">
                 Planning your wedding is unforgettable — and choosing the right
                 bridal artist is one of the most important decisions. Venus
                 understands how to bring your vision to life and make you feel
@@ -163,10 +163,10 @@ export default async function HomePage() {
                   <Reveal key={service.id} delay={index * 80} direction="up">
                   <div className="border-b border-gold/15 pb-4 last:border-0">
                     <div className="flex flex-wrap items-baseline justify-between gap-2">
-                      <h3 className="font-serif text-xl text-espresso">
+                      <h3 className="type-subheading text-xl text-espresso">
                         {service.title}
                       </h3>
-                      <span className="text-xs tracking-[0.12em] text-gold uppercase">
+                      <span className="type-caption text-gold">
                         {service.priceLabel}
                       </span>
                     </div>
@@ -196,13 +196,13 @@ export default async function HomePage() {
           <div className="mx-auto w-full min-w-0 max-w-6xl px-4">
             <Reveal>
               <div className="max-w-2xl">
-                <p className="text-xs tracking-[0.25em] text-taupe uppercase">
+                <p className="type-eyebrow text-taupe">
                   Event makeup &amp; hairdo
                 </p>
-                <h2 className="mt-3 font-serif text-3xl text-espresso sm:text-4xl md:text-5xl">
+                <h2 className="type-section-title mt-3 text-3xl text-espresso sm:text-4xl md:text-5xl">
                   Makeup &amp; hairdo for every occasion
                 </h2>
-                <p className="mt-4 leading-7 text-mocha/80">
+                <p className="type-body mt-4 leading-7 text-mocha/80">
                   From ROM ceremonies to dinner events and bridesmaid styling —
                   complete makeup and hairdo packages for every moment.
                 </p>
@@ -215,13 +215,13 @@ export default async function HomePage() {
                   className="rounded-2xl border border-gold/15 bg-white/60 p-6 shadow-sm transition duration-300 hover:-translate-y-2 hover:border-gold/30 hover:shadow-lg"
                 >
                   <div className="gold-line-grow h-px w-8 bg-gold" />
-                  <h3 className="mt-4 font-serif text-xl text-espresso">
+                  <h3 className="mt-4 type-subheading text-xl text-espresso">
                     {service.title}
                   </h3>
                   <p className="mt-3 text-sm leading-7 text-mocha/75">
                     {service.description}
                   </p>
-                  <p className="mt-5 text-xs tracking-[0.12em] text-gold uppercase">
+                  <p className="mt-5 type-caption text-gold">
                     {service.priceLabel}
                   </p>
                 </article>
@@ -237,10 +237,10 @@ export default async function HomePage() {
             <Reveal>
               <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
               <div>
-                <p className="text-xs tracking-[0.25em] text-taupe uppercase">
+                <p className="type-eyebrow text-taupe">
                   Work gallery
                 </p>
-                <h2 className="mt-3 font-serif text-3xl text-espresso sm:text-4xl md:text-5xl">
+                <h2 className="type-section-title mt-3 text-3xl text-espresso sm:text-4xl md:text-5xl">
                   Makeup &amp; hairdo looks
                 </h2>
               </div>
@@ -248,7 +248,7 @@ export default async function HomePage() {
                 href={INSTAGRAM_URL}
                 target="_blank"
                 rel="noreferrer"
-                className="text-sm tracking-[0.12em] text-gold uppercase transition hover:text-mocha"
+                className="type-caption text-gold transition hover:text-mocha"
               >
                 See all on Instagram →
               </a>
@@ -272,12 +272,9 @@ export default async function HomePage() {
         <section id="testimonials" className="bg-cream py-16 sm:py-24">
           <div className="mx-auto w-full min-w-0 max-w-6xl px-4">
             <Reveal>
-              <p className="text-center text-xs tracking-[0.25em] text-taupe uppercase">
+              <p className="text-center type-eyebrow text-taupe">
                 Testimonials
               </p>
-              <h2 className="mt-3 text-center font-serif text-3xl text-espresso sm:text-4xl md:text-5xl">
-                Kind words from clients
-              </h2>
             </Reveal>
             <div className="mt-12 grid gap-6 sm:grid-cols-2">
               {TESTIMONIALS.map((item, index) => (
@@ -285,10 +282,10 @@ export default async function HomePage() {
                 <blockquote
                   className="rounded-2xl border border-gold/15 bg-white/70 p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-md sm:p-8"
                 >
-                  <p className="leading-8 text-mocha/85">&ldquo;{item.quote}&rdquo;</p>
+                  <p className="type-body leading-8 text-mocha/85">&ldquo;{item.quote}&rdquo;</p>
                   <footer className="mt-5 border-t border-gold/10 pt-4">
-                    <p className="font-medium text-espresso">~ {item.name}</p>
-                    <p className="text-xs tracking-[0.1em] text-taupe uppercase">
+                    <p className="font-serif text-lg italic text-espresso">~ {item.name}</p>
+                    <p className="type-caption mt-1 text-taupe">
                       {item.event}
                     </p>
                   </footer>
@@ -303,7 +300,7 @@ export default async function HomePage() {
         <section className="border-y border-gold/15 bg-background py-12 sm:py-16">
           <div className="mx-auto w-full min-w-0 max-w-6xl px-4">
             <Reveal>
-              <p className="text-center text-xs tracking-[0.25em] text-taupe uppercase">
+              <p className="text-center type-eyebrow text-taupe">
                 Brands we use
               </p>
             </Reveal>
@@ -315,10 +312,10 @@ export default async function HomePage() {
         <section className="bg-cream py-16 sm:py-20">
           <div className="mx-auto w-full min-w-0 max-w-3xl px-4">
             <Reveal>
-              <p className="text-center text-xs tracking-[0.25em] text-taupe uppercase">
+              <p className="text-center type-eyebrow text-taupe">
                 FAQs
               </p>
-              <h2 className="mt-3 text-center font-serif text-3xl text-espresso sm:text-4xl">
+              <h2 className="type-section-title mt-3 text-center text-3xl text-espresso sm:text-4xl">
                 Frequently asked questions
               </h2>
             </Reveal>
@@ -328,7 +325,7 @@ export default async function HomePage() {
                 <div
                   className="rounded-xl border border-gold/15 bg-white/60 p-5 transition duration-300 hover:border-gold/25 hover:shadow-sm sm:p-6"
                 >
-                  <dt className="font-serif text-lg text-espresso">{item.question}</dt>
+                  <dt className="type-subheading text-lg text-espresso">{item.question}</dt>
                   <dd className="mt-2 text-sm leading-7 text-mocha/80">{item.answer}</dd>
                 </div>
                 </Reveal>
@@ -340,11 +337,11 @@ export default async function HomePage() {
         {/* Contact */}
         <section id="contact" className="bg-espresso py-16 sm:py-24">
           <Reveal className="mx-auto w-full min-w-0 max-w-6xl px-4 text-center">
-            <p className="text-xs tracking-[0.25em] text-gold uppercase">Contact</p>
-            <h2 className="mt-3 font-serif text-3xl text-cream sm:text-4xl md:text-5xl">
+            <p className="type-eyebrow text-gold">Contact</p>
+            <h2 className="type-section-title mt-3 text-3xl text-cream sm:text-4xl md:text-5xl">
               Ready to book makeup &amp; hairdo?
             </h2>
-            <p className="mx-auto mt-5 max-w-2xl leading-8 text-gold-light/80">
+            <p className="type-body mx-auto mt-5 max-w-2xl text-gold-light/80">
               Message Venus on WhatsApp or Instagram to check availability, share
               your event details, or book a bridal trial for makeup and hair.
             </p>

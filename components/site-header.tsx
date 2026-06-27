@@ -29,7 +29,7 @@ export function SiteHeader({ whatsappNumber = "" }: HeaderProps) {
       <div className="mx-auto flex w-full min-w-0 max-w-6xl items-center justify-between px-4 py-3 sm:py-4">
         <Link
           href="/"
-          className="font-serif text-lg tracking-wide text-espresso sm:text-xl"
+          className="font-serif text-xl italic tracking-[0.03em] text-espresso sm:text-2xl"
         >
           Venus Makeup Artist
         </Link>
@@ -39,7 +39,7 @@ export function SiteHeader({ whatsappNumber = "" }: HeaderProps) {
             <a
               key={link.href}
               href={link.href}
-              className="rounded-lg px-3 py-2 text-xs tracking-[0.1em] text-mocha uppercase transition hover:bg-gold/10 hover:text-espresso"
+              className="type-nav rounded-lg px-3 py-2 text-mocha transition hover:bg-gold/10 hover:text-espresso"
             >
               {link.label}
             </a>
@@ -120,15 +120,15 @@ export function SiteFooter({ whatsappNumber = "" }: { whatsappNumber?: string })
     <footer className="border-t border-gold/15 bg-espresso text-cream">
       <div className="mx-auto grid w-full min-w-0 max-w-6xl gap-10 px-4 py-12 sm:grid-cols-2 lg:grid-cols-4 lg:py-14">
         <div>
-          <p className="font-serif text-xl text-cream">Venus Makeup Artist</p>
-          <p className="mt-3 text-sm leading-7 text-gold-light/75">
+          <p className="font-serif text-2xl italic tracking-[0.02em] text-cream">Venus Makeup Artist</p>
+          <p className="type-body mt-3 text-sm text-gold-light/75">
             Professional makeup &amp; hairdo services in Kuala Lumpur. Bridal,
             ROM, and event packages — available across the Klang Valley.
           </p>
         </div>
 
         <div>
-          <p className="text-xs tracking-[0.2em] text-gold uppercase">Bridal</p>
+          <p className="type-eyebrow text-gold">Bridal</p>
           <ul className="mt-4 space-y-2 text-sm text-gold-light/80">
             <li>
               <a href="#bridal" className="transition hover:text-champagne">
@@ -154,7 +154,7 @@ export function SiteFooter({ whatsappNumber = "" }: { whatsappNumber?: string })
         </div>
 
         <div>
-          <p className="text-xs tracking-[0.2em] text-gold uppercase">Services</p>
+          <p className="type-eyebrow text-gold">Services</p>
           <ul className="mt-4 space-y-2 text-sm text-gold-light/80">
             <li>
               <a href="#services" className="transition hover:text-champagne">
@@ -180,7 +180,7 @@ export function SiteFooter({ whatsappNumber = "" }: { whatsappNumber?: string })
         </div>
 
         <div>
-          <p className="text-xs tracking-[0.2em] text-gold uppercase">Contact</p>
+          <p className="type-eyebrow text-gold">Contact</p>
           <ul className="mt-4 space-y-3 text-sm text-gold-light/80">
             <li>Kuala Lumpur, Malaysia</li>
             {whatsappNumber ? (

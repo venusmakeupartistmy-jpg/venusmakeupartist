@@ -29,7 +29,7 @@ export function PortfolioImage({
         <>
           <div className="gallery-overlay absolute inset-0 bg-espresso/15 md:bg-espresso/0" />
           <div className="gallery-caption absolute inset-x-0 bottom-0 bg-gradient-to-t from-espresso/85 via-espresso/40 to-transparent p-3 sm:p-4">
-            <p className="text-[0.65rem] tracking-[0.18em] text-gold-light uppercase sm:text-xs sm:tracking-[0.2em]">
+            <p className="type-caption text-gold-light">
               {label}
             </p>
           </div>

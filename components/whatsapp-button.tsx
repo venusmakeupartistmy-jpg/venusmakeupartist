@@ -53,8 +53,8 @@ export function WhatsAppCta({
 
   const base =
     variant === "primary"
-      ? "rounded-full bg-[#25D366] px-6 py-3 text-center text-sm font-medium tracking-[0.12em] text-white uppercase transition hover:bg-[#20bd5a] sm:px-7"
-      : "rounded-full border border-[#25D366]/50 px-6 py-3 text-center text-sm font-medium tracking-[0.12em] text-[#25D366] uppercase transition hover:border-[#25D366] hover:bg-[#25D366]/10 sm:px-7";
+      ? "w-fit max-w-full rounded-full bg-[#25D366] px-5 py-2.5 text-center text-xs font-medium tracking-[0.08em] text-white uppercase transition hover:bg-[#20bd5a] sm:px-7 sm:py-3 sm:text-sm sm:tracking-[0.12em]"
+      : "w-fit max-w-full rounded-full border border-[#25D366]/50 px-5 py-2.5 text-center text-xs font-medium tracking-[0.08em] text-[#25D366] uppercase transition hover:border-[#25D366] hover:bg-[#25D366]/10 sm:px-7 sm:py-3 sm:text-sm sm:tracking-[0.12em]";
 
   return (
     <a

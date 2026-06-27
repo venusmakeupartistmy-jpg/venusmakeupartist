@@ -24,7 +24,7 @@
   --color-espresso: var(--espresso);
   --color-mocha: var(--mocha);
   --color-taupe: var(--taupe);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-jost);
   --font-serif: var(--font-cormorant);
 }
 
@@ -35,13 +35,94 @@ html {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  font-family: var(--font-jost), "Segoe UI", sans-serif;
+  font-weight: 300;
+  line-height: 1.65;
+  letter-spacing: 0.01em;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
   -webkit-text-size-adjust: 100%;
 }
 
 .font-serif {
   font-family: var(--font-cormorant), Georgia, "Times New Roman", serif;
+  font-feature-settings: "liga" 1, "kern" 1;
+}
+
+.type-eyebrow {
+  font-family: var(--font-jost), sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+@media (min-width: 640px) {
+  .type-eyebrow {
+    font-size: 0.75rem;
+    letter-spacing: 0.28em;
+  }
+}
+
+.type-display {
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: 0.015em;
+}
+
+.type-section-title {
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: 0.01em;
+}
+
+.type-subheading {
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: 0.01em;
+}
+
+.type-body {
+  font-weight: 300;
+  line-height: 1.75;
+  letter-spacing: 0.015em;
+}
+
+.type-caption {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.type-nav {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.type-btn {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+@media (min-width: 640px) {
+  .type-btn {
+    font-size: 0.875rem;
+    letter-spacing: 0.12em;
+  }
 }
 
 .text-gold-gradient {
