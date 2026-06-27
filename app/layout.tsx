@@ -18,6 +18,10 @@ export const metadata: Metadata = {
   description:
     "Personal, bridal, dinner and creative makeup styling by Venus. Based in Kuala Lumpur, Malaysia.",
   metadataBase: new URL("https://venusmakeupartist.site"),
+  icons: {
+    icon: "/icon.png",
+    apple: "/apple-icon.png",
+  },
   openGraph: {
     title: "Venus Makeup Artist",
     description:
