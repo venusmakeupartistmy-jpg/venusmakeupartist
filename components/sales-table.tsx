@@ -157,12 +157,28 @@ function SaleEditor({
 export function SalesTable({ sales, services, onDelete, onUpdate }: Props) {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [savingId, setSavingId] = useState<string | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<Sale | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   async function saveSale(id: string, input: SaleUpdateInput) {
     setSavingId(id);
     const ok = await onUpdate(id, input);
     setSavingId(null);
     if (ok) setEditingId(null);
+  }
+
+  function closeDeleteDialog() {
+    if (deletingId) return;
+    setPendingDelete(null);
+  }
+
+  async function confirmDelete() {
+    if (!pendingDelete || deletingId) return;
+
+    setDeletingId(pendingDelete.id);
+    await onDelete(pendingDelete.id);
+    setDeletingId(null);
+    setPendingDelete(null);
   }
 
   if (sales.length === 0) {
@@ -210,7 +226,7 @@ export function SalesTable({ sales, services, onDelete, onUpdate }: Props) {
                     </button>
                     <button
                       type="button"
-                      onClick={() => onDelete(sale.id)}
+                      onClick={() => setPendingDelete(sale)}
                       className="text-xs text-rose-700 underline-offset-2 hover:underline"
                     >
                       Delete
@@ -290,7 +306,7 @@ export function SalesTable({ sales, services, onDelete, onUpdate }: Props) {
                           </button>
                           <button
                             type="button"
-                            onClick={() => onDelete(sale.id)}
+                            onClick={() => setPendingDelete(sale)}
                             className="text-xs text-rose-700 underline-offset-2 hover:underline"
                           >
                             Delete
@@ -305,6 +321,56 @@ export function SalesTable({ sales, services, onDelete, onUpdate }: Props) {
           </table>
         </div>
       </div>
+
+      {pendingDelete ? (
+        <div
+          className="fixed inset-0 z-50 flex items-end justify-center bg-espresso/40 p-0 sm:items-center sm:p-4"
+          onClick={closeDeleteDialog}
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="delete-sale-title"
+            className="w-full max-w-sm rounded-t-[2rem] border border-rose-100 bg-white p-5 shadow-2xl sm:rounded-[2rem] sm:p-6"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <h3
+              id="delete-sale-title"
+              className="font-serif text-xl text-rose-950 sm:text-2xl"
+            >
+              Delete this sale?
+            </h3>
+            <p className="mt-2 text-sm text-rose-800/70">
+              {pendingDelete.service} · {formatMoney(Number(pendingDelete.amount))}
+            </p>
+            <p className="mt-1 text-xs text-rose-800/60">
+              {formatDateTime(pendingDelete.sold_at)}
+            </p>
+            <p className="mt-3 text-sm text-rose-800/70">
+              This cannot be undone.
+            </p>
+
+            <div className="mt-5 flex gap-2">
+              <button
+                type="button"
+                disabled={deletingId !== null}
+                onClick={closeDeleteDialog}
+                className="flex-1 rounded-2xl border border-rose-200 px-4 py-2.5 text-sm font-medium text-rose-800 disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                disabled={deletingId !== null}
+                onClick={() => void confirmDelete()}
+                className="flex-1 rounded-2xl bg-rose-900 px-4 py-2.5 text-sm font-medium text-white disabled:opacity-50"
+              >
+                {deletingId === pendingDelete.id ? "Deleting…" : "Delete"}
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </>
   );
 }

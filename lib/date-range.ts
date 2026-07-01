@@ -1,4 +1,10 @@
-export type DateRangePreset = "today" | "past-week" | "this-month" | "custom";
+export type DateRangePreset =
+  | "today"
+  | "yesterday"
+  | "past-2-days"
+  | "past-week"
+  | "this-month"
+  | "custom";
 
 export type DateRange = {
   preset: DateRangePreset;
@@ -27,6 +33,12 @@ export function todayIsoDate() {
   return formatIsoDate(new Date());
 }
 
+function daysAgoIso(days: number) {
+  const date = new Date();
+  date.setDate(date.getDate() - days);
+  return formatIsoDate(date);
+}
+
 export function getDateRange(
   preset: DateRangePreset,
   customFrom?: string,
@@ -39,6 +51,23 @@ export function getDateRange(
     return {
       preset,
       from: today,
+      to: today,
+    };
+  }
+
+  if (preset === "yesterday") {
+    const yesterday = daysAgoIso(1);
+    return {
+      preset,
+      from: yesterday,
+      to: yesterday,
+    };
+  }
+
+  if (preset === "past-2-days") {
+    return {
+      preset,
+      from: daysAgoIso(1),
       to: today,
     };
   }
@@ -87,6 +116,8 @@ export function formatRangeLabel(range: DateRange) {
   });
 
   if (range.preset === "today") return "Today";
+  if (range.preset === "yesterday") return "Yesterday";
+  if (range.preset === "past-2-days") return "Past 2 days";
   if (range.preset === "past-week") return "Past 7 days";
   if (range.preset === "this-month") return "This month";
 

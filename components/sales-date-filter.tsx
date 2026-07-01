@@ -14,6 +14,8 @@ type Props = {
 
 const PRESETS: { value: DateRangePreset; label: string }[] = [
   { value: "today", label: "Today" },
+  { value: "yesterday", label: "Yesterday" },
+  { value: "past-2-days", label: "Past 2 days" },
   { value: "past-week", label: "Past week" },
   { value: "this-month", label: "This month" },
   { value: "custom", label: "Custom range" },
@@ -35,7 +37,7 @@ export function SalesDateFilter({
           <p className="mt-1 break-words text-sm text-rose-800/70">{formatRangeLabel(range)}</p>
         </div>
 
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
           {PRESETS.map((preset) => (
             <button
               key={preset.value}
