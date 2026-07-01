@@ -7,6 +7,10 @@ import {
 } from "@/lib/admin-path";
 import { packagesByCategory, type WebsitePackage } from "@/lib/website-packages";
 import type { SaleButton } from "@/lib/sale-buttons";
+import {
+  MAX_SALE_BUTTONS,
+  createEmptySaleButton,
+} from "@/lib/sale-buttons";
 
 type Props = {
   saleButtons: SaleButton[];
@@ -67,6 +71,20 @@ export function AdminSettingsPanel({
         };
       }),
     );
+  }
+
+  function addSaleButton() {
+    setDraftSaleButtons((current) => {
+      if (current.length >= MAX_SALE_BUTTONS) return current;
+      return [...current, createEmptySaleButton()];
+    });
+  }
+
+  function removeSaleButton(id: string) {
+    setDraftSaleButtons((current) => {
+      if (current.length <= 1) return current;
+      return current.filter((button) => button.id !== id);
+    });
   }
 
   async function saveSaleButtons() {
@@ -306,15 +324,15 @@ export function AdminSettingsPanel({
             <section className="mt-8">
               <h3 className="font-serif text-2xl text-rose-950">Sale buttons</h3>
               <p className="mt-1 text-sm text-rose-800/70">
-                Rename and set fixed prices for the 10 admin sale buttons. These are
-                only for your ledger — not shown on the public website.
+                Add, remove, rename, and set fixed prices for admin sale buttons. These
+                are only for your ledger — not shown on the public website.
               </p>
 
               <div className="mt-4 space-y-3">
                 {draftSaleButtons.map((button, index) => (
                   <div
                     key={button.id}
-                    className="grid gap-2 rounded-xl border border-rose-100 bg-rose-50/40 p-3 sm:grid-cols-[minmax(0,1fr)_8rem] sm:items-end sm:gap-3"
+                    className="grid gap-2 rounded-xl border border-rose-100 bg-rose-50/40 p-3 sm:grid-cols-[minmax(0,1fr)_8rem_auto] sm:items-end sm:gap-3"
                   >
                     <label className="block min-w-0 text-sm">
                       <span className="mb-1.5 block font-medium text-rose-950">
@@ -344,18 +362,36 @@ export function AdminSettingsPanel({
                         className="w-full rounded-xl border border-rose-200 bg-white px-4 py-3 outline-none focus:ring-2 focus:ring-rose-300"
                       />
                     </label>
+                    <button
+                      type="button"
+                      onClick={() => removeSaleButton(button.id)}
+                      disabled={draftSaleButtons.length <= 1}
+                      className="h-[46px] rounded-xl border border-rose-200 px-4 text-sm text-rose-800 transition hover:bg-rose-100 disabled:opacity-40 sm:mt-6"
+                    >
+                      Remove
+                    </button>
                   </div>
                 ))}
               </div>
 
-              <button
-                type="button"
-                onClick={() => void saveSaleButtons()}
-                disabled={savingSaleButtons}
-                className="mt-4 w-full rounded-xl bg-rose-900 px-4 py-3 text-sm font-medium text-white disabled:opacity-60 sm:w-auto"
-              >
-                {savingSaleButtons ? "Saving..." : "Save sale buttons"}
-              </button>
+              <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                <button
+                  type="button"
+                  onClick={addSaleButton}
+                  disabled={draftSaleButtons.length >= MAX_SALE_BUTTONS}
+                  className="w-full rounded-xl border border-rose-200 px-4 py-3 text-sm text-rose-900 sm:w-auto disabled:opacity-40"
+                >
+                  Add button
+                </button>
+                <button
+                  type="button"
+                  onClick={() => void saveSaleButtons()}
+                  disabled={savingSaleButtons}
+                  className="w-full rounded-xl bg-rose-900 px-4 py-3 text-sm font-medium text-white disabled:opacity-60 sm:w-auto"
+                >
+                  {savingSaleButtons ? "Saving..." : "Save sale buttons"}
+                </button>
+              </div>
             </section>
 
             <section className="mt-10 border-t border-rose-100 pt-8">

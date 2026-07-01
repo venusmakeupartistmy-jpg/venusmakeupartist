@@ -5,9 +5,9 @@ export type SaleButton = {
   amount: number;
 };
 
-export const SALE_BUTTON_COUNT = 10;
+export const MAX_SALE_BUTTONS = 20;
 
-/** Starter labels for the ledger — rename in Settings anytime. */
+/** Starter labels for the ledger — add, remove, or rename in Settings. */
 export const DEFAULT_SALE_BUTTONS: SaleButton[] = [
   { id: "btn-01", label: "Bridal full", amount: 450 },
   { id: "btn-02", label: "Bridal trial", amount: 180 },
@@ -21,38 +21,49 @@ export const DEFAULT_SALE_BUTTONS: SaleButton[] = [
   { id: "btn-10", label: "Product", amount: 50 },
 ];
 
-function sanitizeButton(raw: unknown, fallback: SaleButton): SaleButton {
-  if (!raw || typeof raw !== "object") return fallback;
+function parseSaleButton(raw: unknown): SaleButton | null {
+  if (!raw || typeof raw !== "object") return null;
 
   const item = raw as Record<string, unknown>;
-  if (item.id !== fallback.id) return fallback;
-
+  const id = typeof item.id === "string" ? item.id.trim() : "";
   const label = typeof item.label === "string" ? item.label.trim() : "";
   const amount = Number(item.amount);
 
+  if (!id || !label) return null;
+  if (!Number.isFinite(amount) || amount < 0) return null;
+
+  return { id, label, amount };
+}
+
+export function createSaleButtonId(): string {
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    return `btn-${crypto.randomUUID().slice(0, 8)}`;
+  }
+  return `btn-${Date.now().toString(36)}`;
+}
+
+export function createEmptySaleButton(): SaleButton {
   return {
-    id: fallback.id,
-    label: label || fallback.label,
-    amount: Number.isFinite(amount) && amount >= 0 ? amount : fallback.amount,
+    id: createSaleButtonId(),
+    label: "",
+    amount: 0,
   };
 }
 
 export function mergeSaleButtons(stored: unknown): SaleButton[] {
   if (!Array.isArray(stored)) return [...DEFAULT_SALE_BUTTONS];
 
-  const byId = new Map(
-    stored
-      .map((item) => {
-        if (!item || typeof item !== "object") return null;
-        const id = (item as SaleButton).id;
-        return typeof id === "string" ? ([id, item] as const) : null;
-      })
-      .filter(Boolean) as [string, unknown][],
-  );
+  const seen = new Set<string>();
+  const buttons: SaleButton[] = [];
 
-  return DEFAULT_SALE_BUTTONS.map((fallback) =>
-    sanitizeButton(byId.get(fallback.id), fallback),
-  );
+  for (const raw of stored) {
+    const button = parseSaleButton(raw);
+    if (!button || seen.has(button.id)) continue;
+    seen.add(button.id);
+    buttons.push(button);
+  }
+
+  return buttons.length > 0 ? buttons : [...DEFAULT_SALE_BUTTONS];
 }
 
 export function normalizeSaleButtons(input: unknown): SaleButton[] {
@@ -60,21 +71,30 @@ export function normalizeSaleButtons(input: unknown): SaleButton[] {
     throw new Error("Sale buttons must be an array.");
   }
 
-  return DEFAULT_SALE_BUTTONS.map((fallback) => {
-    const raw = input.find(
-      (item) =>
-        item &&
-        typeof item === "object" &&
-        (item as SaleButton).id === fallback.id,
-    );
-    const button = sanitizeButton(raw, fallback);
+  const seen = new Set<string>();
+  const buttons: SaleButton[] = [];
 
-    if (!button.label.trim()) {
-      throw new Error(`Button name is required for slot ${fallback.id}.`);
+  for (const raw of input) {
+    const button = parseSaleButton(raw);
+    if (!button) {
+      throw new Error("Each button needs a name and a valid price (MYR 0 or more).");
     }
+    if (seen.has(button.id)) {
+      throw new Error("Duplicate sale button ids.");
+    }
+    seen.add(button.id);
+    buttons.push(button);
+  }
 
-    return button;
-  });
+  if (buttons.length === 0) {
+    throw new Error("At least one sale button is required.");
+  }
+
+  if (buttons.length > MAX_SALE_BUTTONS) {
+    throw new Error(`Maximum ${MAX_SALE_BUTTONS} sale buttons.`);
+  }
+
+  return buttons;
 }
 
 export function saleButtonLabels(buttons: SaleButton[]): string[] {
