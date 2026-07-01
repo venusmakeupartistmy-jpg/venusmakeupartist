@@ -21,6 +21,7 @@ import { AdminLogoutButton } from "@/components/admin-login";
 import { AdminSettingsPanel } from "@/components/admin-settings-panel";
 import { SalesDateFilter } from "@/components/sales-date-filter";
 import { SalesForm } from "@/components/sales-form";
+import { SalesSummaryTable } from "@/components/sales-summary-table";
 import { SalesTable } from "@/components/sales-table";
 
 export function SalesDashboard() {
@@ -250,6 +251,15 @@ export function SalesDashboard() {
             Back to website
           </a>
         </div>
+      </div>
+
+      <div className="mb-6">
+        <SalesSummaryTable
+          sales={sales}
+          saleButtons={saleButtons}
+          range={range}
+          onSaleButtonsUpdated={setSaleButtons}
+        />
       </div>
 
       <div className="grid min-w-0 gap-6 sm:gap-8 lg:grid-cols-[minmax(0,360px)_1fr]">

@@ -3,12 +3,17 @@ export type SaleButton = {
   id: string;
   label: string;
   amount: number;
+  /** Fixed commission amount per unit sold (MYR). */
+  commission_amount: number;
 };
 
 export const MAX_SALE_BUTTONS = 20;
 
-/** Starter labels for the ledger — add, remove, or rename in Settings. */
-export const DEFAULT_SALE_BUTTONS: SaleButton[] = [
+const DEFAULT_SALE_BUTTON_SEEDS: Array<{
+  id: string;
+  label: string;
+  amount: number;
+}> = [
   { id: "btn-01", label: "Bridal full", amount: 450 },
   { id: "btn-02", label: "Bridal trial", amount: 180 },
   { id: "btn-03", label: "Bridal touch-up", amount: 120 },
@@ -21,6 +26,14 @@ export const DEFAULT_SALE_BUTTONS: SaleButton[] = [
   { id: "btn-10", label: "Product", amount: 50 },
 ];
 
+/** Starter labels for the ledger — add, remove, or rename in Settings. */
+export const DEFAULT_SALE_BUTTONS: SaleButton[] = DEFAULT_SALE_BUTTON_SEEDS.map(
+  (button) => ({
+    ...button,
+    commission_amount: 0,
+  }),
+);
+
 function parseSaleButton(raw: unknown): SaleButton | null {
   if (!raw || typeof raw !== "object") return null;
 
@@ -28,11 +41,20 @@ function parseSaleButton(raw: unknown): SaleButton | null {
   const id = typeof item.id === "string" ? item.id.trim() : "";
   const label = typeof item.label === "string" ? item.label.trim() : "";
   const amount = Number(item.amount);
+  const commissionAmount = Number(item.commission_amount);
 
   if (!id || !label) return null;
   if (!Number.isFinite(amount) || amount < 0) return null;
 
-  return { id, label, amount };
+  return {
+    id,
+    label,
+    amount,
+    commission_amount:
+      Number.isFinite(commissionAmount) && commissionAmount >= 0
+        ? commissionAmount
+        : 0,
+  };
 }
 
 export function createSaleButtonId(): string {
@@ -47,6 +69,7 @@ export function createEmptySaleButton(): SaleButton {
     id: createSaleButtonId(),
     label: "",
     amount: 0,
+    commission_amount: 0,
   };
 }
 
@@ -99,4 +122,10 @@ export function normalizeSaleButtons(input: unknown): SaleButton[] {
 
 export function saleButtonLabels(buttons: SaleButton[]): string[] {
   return buttons.map((button) => button.label.trim()).filter(Boolean);
+}
+
+export function calculateCommissionTotal(quantity: number, commissionPerUnit: number) {
+  if (!Number.isFinite(quantity) || quantity <= 0) return 0;
+  if (!Number.isFinite(commissionPerUnit) || commissionPerUnit <= 0) return 0;
+  return Math.round(quantity * commissionPerUnit * 100) / 100;
 }

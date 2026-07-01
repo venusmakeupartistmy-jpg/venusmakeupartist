@@ -55,7 +55,7 @@ export function AdminSettingsPanel({
 
   function updateSaleButton(
     id: string,
-    field: "label" | "amount",
+    field: "label" | "amount" | "commission_amount",
     value: string,
   ) {
     setDraftSaleButtons((current) =>
@@ -63,6 +63,16 @@ export function AdminSettingsPanel({
         if (button.id !== id) return button;
         if (field === "label") {
           return { ...button, label: value };
+        }
+        if (field === "commission_amount") {
+          const commission_amount = value === "" ? 0 : Number(value);
+          return {
+            ...button,
+            commission_amount:
+              Number.isFinite(commission_amount) && commission_amount >= 0
+                ? commission_amount
+                : button.commission_amount,
+          };
         }
         const amount = value === "" ? 0 : Number(value);
         return {
@@ -324,15 +334,16 @@ export function AdminSettingsPanel({
             <section className="mt-8">
               <h3 className="font-serif text-2xl text-rose-950">Sale buttons</h3>
               <p className="mt-1 text-sm text-rose-800/70">
-                Add, remove, rename, and set fixed prices for admin sale buttons. These
-                are only for your ledger — not shown on the public website.
+                Add, remove, rename, and set fixed prices for admin sale buttons. Set
+                commission amount per unit for package totals. These are only for your
+                ledger — not shown on the public website.
               </p>
 
               <div className="mt-4 space-y-3">
                 {draftSaleButtons.map((button, index) => (
                   <div
                     key={button.id}
-                    className="grid gap-2 rounded-xl border border-rose-100 bg-rose-50/40 p-3 sm:grid-cols-[minmax(0,1fr)_8rem_auto] sm:items-end sm:gap-3"
+                    className="grid gap-2 rounded-xl border border-rose-100 bg-rose-50/40 p-3 sm:grid-cols-[minmax(0,1fr)_8rem_6rem_auto] sm:items-end sm:gap-3"
                   >
                     <label className="block min-w-0 text-sm">
                       <span className="mb-1.5 block font-medium text-rose-950">
@@ -358,6 +369,25 @@ export function AdminSettingsPanel({
                         value={button.amount}
                         onChange={(event) =>
                           updateSaleButton(button.id, "amount", event.target.value)
+                        }
+                        className="w-full rounded-xl border border-rose-200 bg-white px-4 py-3 outline-none focus:ring-2 focus:ring-rose-300"
+                      />
+                    </label>
+                    <label className="block text-sm">
+                      <span className="mb-1.5 block font-medium text-rose-950">
+                        Comm. / unit
+                      </span>
+                      <input
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        value={button.commission_amount ?? 0}
+                        onChange={(event) =>
+                          updateSaleButton(
+                            button.id,
+                            "commission_amount",
+                            event.target.value,
+                          )
                         }
                         className="w-full rounded-xl border border-rose-200 bg-white px-4 py-3 outline-none focus:ring-2 focus:ring-rose-300"
                       />
