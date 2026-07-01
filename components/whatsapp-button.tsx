@@ -1,3 +1,6 @@
+"use client";
+
+import { useLocale } from "@/components/locale-provider";
 import {
   BOOKING_MESSAGE,
   buildWhatsAppUrl,
@@ -23,6 +26,7 @@ type Props = {
 };
 
 export function WhatsAppFloatingButton({ phone }: Props) {
+  const { t } = useLocale();
   const url = buildWhatsAppUrl(phone, BOOKING_MESSAGE);
   if (!url) return null;
 
@@ -31,8 +35,8 @@ export function WhatsAppFloatingButton({ phone }: Props) {
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label="Chat on WhatsApp"
-      title="Chat on WhatsApp"
+      aria-label={t.common.chatOnWhatsApp}
+      title={t.common.chatOnWhatsApp}
       className="animate-float-gentle fixed bottom-5 right-5 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg shadow-black/30 ring-2 ring-gold/25 transition hover:scale-105 hover:bg-[#20bd5a] hover:shadow-xl sm:bottom-6 sm:right-6 sm:h-[3.75rem] sm:w-[3.75rem]"
     >
       <WhatsAppIcon className="h-7 w-7" />
@@ -48,6 +52,7 @@ export function WhatsAppCta({
   variant?: "primary" | "outline";
   className?: string;
 }) {
+  const { t } = useLocale();
   const url = buildWhatsAppUrl(phone, BOOKING_MESSAGE);
   if (!url) return null;
 
@@ -64,7 +69,7 @@ export function WhatsAppCta({
       className={`inline-flex items-center justify-center gap-2 ${base} ${className}`}
     >
       <WhatsAppIcon className="h-4 w-4" />
-      WhatsApp
+      {t.common.whatsapp}
     </a>
   );
 }

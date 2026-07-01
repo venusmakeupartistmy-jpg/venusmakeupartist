@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Jost } from "next/font/google";
+import { LocaleProvider } from "@/components/locale-provider";
 import "./globals.css";
 
 const jost = Jost({
@@ -50,7 +51,9 @@ export default function RootLayout({
       lang="en"
       className={`${jost.variable} ${cormorant.variable} h-full scroll-smooth antialiased`}
     >
-      <body className="min-h-full flex flex-col overflow-x-hidden">{children}</body>
+      <body className="min-h-full flex flex-col overflow-x-hidden">
+        <LocaleProvider>{children}</LocaleProvider>
+      </body>
     </html>
   );
 }
