@@ -11,9 +11,15 @@ import {
   normalizeWebsitePackages,
   type WebsitePackage,
 } from "@/lib/website-packages";
+import {
+  mergeSaleButtons,
+  normalizeSaleButtons,
+  type SaleButton,
+} from "@/lib/sale-buttons";
 
 const PASSWORD_KEY = "admin_password_hash";
 const SERVICES_KEY = "service_presets";
+const SALE_BUTTONS_KEY = "sale_buttons";
 const WHATSAPP_KEY = "whatsapp_number";
 const WEBSITE_PACKAGES_KEY = "website_packages";
 
@@ -109,6 +115,18 @@ export async function getWebsitePackages() {
 export async function saveWebsitePackages(input: unknown) {
   const cleaned = normalizeWebsitePackages(input);
   await setSetting(WEBSITE_PACKAGES_KEY, cleaned);
+  return cleaned;
+}
+
+export async function getSaleButtons() {
+  noStore();
+  const stored = await getSetting<unknown>(SALE_BUTTONS_KEY);
+  return mergeSaleButtons(stored);
+}
+
+export async function saveSaleButtons(input: unknown) {
+  const cleaned = normalizeSaleButtons(input);
+  await setSetting(SALE_BUTTONS_KEY, cleaned);
   return cleaned;
 }
 

@@ -10,7 +10,11 @@ import {
 } from "@/lib/date-range";
 import { downloadSalesCsv } from "@/lib/export-sales";
 import type { Sale, SaleUpdateInput } from "@/lib/types";
-import { DEFAULT_SERVICES } from "@/lib/types";
+import {
+  DEFAULT_SALE_BUTTONS,
+  saleButtonLabels,
+  type SaleButton,
+} from "@/lib/sale-buttons";
 import { DEFAULT_WEBSITE_PACKAGES, type WebsitePackage } from "@/lib/website-packages";
 import { AdminLogoutButton } from "@/components/admin-login";
 import { AdminSettingsPanel } from "@/components/admin-settings-panel";
@@ -22,7 +26,7 @@ export function SalesDashboard() {
   const [preset, setPreset] = useState<DateRangePreset>("past-week");
   const [customFrom, setCustomFrom] = useState("");
   const [customTo, setCustomTo] = useState("");
-  const [services, setServices] = useState<string[]>(DEFAULT_SERVICES);
+  const [saleButtons, setSaleButtons] = useState<SaleButton[]>(DEFAULT_SALE_BUTTONS);
   const [whatsappNumber, setWhatsappNumber] = useState("");
   const [websitePackages, setWebsitePackages] = useState<WebsitePackage[]>(
     DEFAULT_WEBSITE_PACKAGES,
@@ -34,6 +38,8 @@ export function SalesDashboard() {
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [error, setError] = useState("");
 
+  const ledgerServices = useMemo(() => saleButtonLabels(saleButtons), [saleButtons]);
+
   const range = useMemo(
     () => getDateRange(preset, customFrom, customTo),
     [preset, customFrom, customTo],
@@ -44,12 +50,12 @@ export function SalesDashboard() {
     if (!response.ok) return;
 
     const data = (await response.json()) as {
-      services: string[];
       whatsappNumber?: string;
       websitePackages?: WebsitePackage[];
+      saleButtons?: SaleButton[];
     };
-    if (data.services?.length) {
-      setServices(data.services);
+    if (data.saleButtons?.length) {
+      setSaleButtons(data.saleButtons);
     }
     if (typeof data.whatsappNumber === "string") {
       setWhatsappNumber(data.whatsappNumber);
@@ -165,10 +171,10 @@ export function SalesDashboard() {
         </div>
         <div className="flex shrink-0 items-center gap-2">
           <AdminSettingsPanel
-            services={services}
+            saleButtons={saleButtons}
             whatsappNumber={whatsappNumber}
             websitePackages={websitePackages}
-            onServicesUpdated={setServices}
+            onSaleButtonsUpdated={setSaleButtons}
             onWhatsAppUpdated={setWhatsappNumber}
             onWebsitePackagesUpdated={setWebsitePackages}
           />
@@ -176,11 +182,7 @@ export function SalesDashboard() {
         </div>
       </div>
 
-      <SalesForm
-        services={services}
-        onCreated={onCreated}
-        className="mb-6 lg:hidden"
-      />
+      <SalesForm saleButtons={saleButtons} onCreated={onCreated} className="mb-6 lg:hidden" />
 
       <div className="mb-6 grid gap-3 sm:mb-8 sm:gap-4 md:grid-cols-3">
         <div className="rounded-3xl border border-rose-100 bg-white/80 p-4 shadow-sm sm:p-6">
@@ -234,16 +236,12 @@ export function SalesDashboard() {
       </div>
 
       <div className="grid min-w-0 gap-6 sm:gap-8 lg:grid-cols-[minmax(0,360px)_1fr]">
-        <SalesForm
-          services={services}
-          onCreated={onCreated}
-          className="hidden lg:block"
-        />
+        <SalesForm saleButtons={saleButtons} onCreated={onCreated} className="hidden lg:block" />
         <div className="min-w-0">
           {error ? <p className="mb-4 text-sm text-rose-700">{error}</p> : null}
           <SalesTable
             sales={sales}
-            services={services}
+            services={ledgerServices}
             onDelete={onDelete}
             onUpdate={onUpdate}
           />

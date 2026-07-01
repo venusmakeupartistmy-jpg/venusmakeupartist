@@ -6,26 +6,27 @@ import {
   ADMIN_LOGIN_PATH,
 } from "@/lib/admin-path";
 import { packagesByCategory, type WebsitePackage } from "@/lib/website-packages";
+import type { SaleButton } from "@/lib/sale-buttons";
 
 type Props = {
-  services: string[];
+  saleButtons: SaleButton[];
   whatsappNumber: string;
   websitePackages: WebsitePackage[];
-  onServicesUpdated: (services: string[]) => void;
+  onSaleButtonsUpdated: (saleButtons: SaleButton[]) => void;
   onWhatsAppUpdated: (whatsappNumber: string) => void;
   onWebsitePackagesUpdated: (websitePackages: WebsitePackage[]) => void;
 };
 
 export function AdminSettingsPanel({
-  services,
+  saleButtons,
   whatsappNumber,
   websitePackages,
-  onServicesUpdated,
+  onSaleButtonsUpdated,
   onWhatsAppUpdated,
   onWebsitePackagesUpdated,
 }: Props) {
   const [open, setOpen] = useState(false);
-  const [draftServices, setDraftServices] = useState<string[]>(services);
+  const [draftSaleButtons, setDraftSaleButtons] = useState<SaleButton[]>(saleButtons);
   const [draftWhatsApp, setDraftWhatsApp] = useState(whatsappNumber);
   const [draftWebsitePackages, setDraftWebsitePackages] =
     useState<WebsitePackage[]>(websitePackages);
@@ -34,13 +35,13 @@ export function AdminSettingsPanel({
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-  const [savingServices, setSavingServices] = useState(false);
+  const [savingSaleButtons, setSavingSaleButtons] = useState(false);
   const [savingWhatsApp, setSavingWhatsApp] = useState(false);
   const [savingWebsitePackages, setSavingWebsitePackages] = useState(false);
   const [savingPassword, setSavingPassword] = useState(false);
 
   function openPanel() {
-    setDraftServices(services);
+    setDraftSaleButtons(saleButtons);
     setDraftWhatsApp(whatsappNumber);
     setDraftWebsitePackages(websitePackages);
     setOpen(true);
@@ -48,18 +49,50 @@ export function AdminSettingsPanel({
     setError("");
   }
 
-  function updateService(index: number, value: string) {
-    setDraftServices((current) =>
-      current.map((item, itemIndex) => (itemIndex === index ? value : item)),
+  function updateSaleButton(
+    id: string,
+    field: "label" | "amount",
+    value: string,
+  ) {
+    setDraftSaleButtons((current) =>
+      current.map((button) => {
+        if (button.id !== id) return button;
+        if (field === "label") {
+          return { ...button, label: value };
+        }
+        const amount = value === "" ? 0 : Number(value);
+        return {
+          ...button,
+          amount: Number.isFinite(amount) && amount >= 0 ? amount : button.amount,
+        };
+      }),
     );
   }
 
-  function addService() {
-    setDraftServices((current) => [...current, ""]);
-  }
+  async function saveSaleButtons() {
+    setSavingSaleButtons(true);
+    setMessage("");
+    setError("");
 
-  function removeService(index: number) {
-    setDraftServices((current) => current.filter((_, itemIndex) => itemIndex !== index));
+    const response = await fetch("/api/settings", {
+      method: "PATCH",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ saleButtons: draftSaleButtons }),
+    });
+
+    setSavingSaleButtons(false);
+
+    if (!response.ok) {
+      const data = (await response.json()) as { error?: string };
+      setError(data.error ?? "Could not save sale buttons.");
+      return;
+    }
+
+    const data = (await response.json()) as { saleButtons: SaleButton[] };
+    onSaleButtonsUpdated(data.saleButtons);
+    setDraftSaleButtons(data.saleButtons);
+    setMessage("Sale buttons updated.");
   }
 
   function updateWebsitePackage(
@@ -149,32 +182,6 @@ export function AdminSettingsPanel({
   }
 
   const { bridal, event } = packagesByCategory(draftWebsitePackages);
-
-  async function saveServices() {
-    setSavingServices(true);
-    setMessage("");
-    setError("");
-
-    const response = await fetch("/api/settings", {
-      method: "PATCH",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ services: draftServices }),
-    });
-
-    setSavingServices(false);
-
-    if (!response.ok) {
-      const data = (await response.json()) as { error?: string };
-      setError(data.error ?? "Could not save service names.");
-      return;
-    }
-
-    const data = (await response.json()) as { services: string[] };
-    onServicesUpdated(data.services);
-    setDraftServices(data.services);
-    setMessage("Service names updated.");
-  }
 
   async function saveWhatsApp() {
     setSavingWhatsApp(true);
@@ -297,49 +304,58 @@ export function AdminSettingsPanel({
             {error ? <p className="mt-4 text-sm text-rose-700">{error}</p> : null}
 
             <section className="mt-8">
-              <h3 className="font-serif text-2xl text-rose-950">Service names</h3>
+              <h3 className="font-serif text-2xl text-rose-950">Sale buttons</h3>
               <p className="mt-1 text-sm text-rose-800/70">
-                Update the preset services shown when recording a sale.
+                Rename and set fixed prices for the 10 admin sale buttons. These are
+                only for your ledger — not shown on the public website.
               </p>
 
               <div className="mt-4 space-y-3">
-                {draftServices.map((service, index) => (
-                  <div key={`service-${index}`} className="flex flex-col gap-2 sm:flex-row">
-                    <input
-                      value={service}
-                      onChange={(event) => updateService(index, event.target.value)}
-                      className="min-w-0 flex-1 rounded-xl border border-rose-200 px-4 py-3 outline-none focus:ring-2 focus:ring-rose-300"
-                      placeholder="Service name"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => removeService(index)}
-                      disabled={draftServices.length <= 1}
-                      className="rounded-xl border border-rose-200 px-4 py-3 text-sm text-rose-800 disabled:opacity-40 sm:shrink-0"
-                    >
-                      Remove
-                    </button>
+                {draftSaleButtons.map((button, index) => (
+                  <div
+                    key={button.id}
+                    className="grid gap-2 rounded-xl border border-rose-100 bg-rose-50/40 p-3 sm:grid-cols-[minmax(0,1fr)_8rem] sm:items-end sm:gap-3"
+                  >
+                    <label className="block min-w-0 text-sm">
+                      <span className="mb-1.5 block font-medium text-rose-950">
+                        Button {index + 1}
+                      </span>
+                      <input
+                        value={button.label}
+                        onChange={(event) =>
+                          updateSaleButton(button.id, "label", event.target.value)
+                        }
+                        className="w-full rounded-xl border border-rose-200 bg-white px-4 py-3 outline-none focus:ring-2 focus:ring-rose-300"
+                        placeholder="Service name"
+                      />
+                    </label>
+                    <label className="block text-sm">
+                      <span className="mb-1.5 block font-medium text-rose-950">
+                        Price (MYR)
+                      </span>
+                      <input
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        value={button.amount}
+                        onChange={(event) =>
+                          updateSaleButton(button.id, "amount", event.target.value)
+                        }
+                        className="w-full rounded-xl border border-rose-200 bg-white px-4 py-3 outline-none focus:ring-2 focus:ring-rose-300"
+                      />
+                    </label>
                   </div>
                 ))}
               </div>
 
-              <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-                <button
-                  type="button"
-                  onClick={addService}
-                  className="w-full rounded-xl border border-rose-200 px-4 py-3 text-sm text-rose-900 sm:w-auto"
-                >
-                  Add service
-                </button>
-                <button
-                  type="button"
-                  onClick={() => void saveServices()}
-                  disabled={savingServices}
-                  className="w-full rounded-xl bg-rose-900 px-4 py-3 text-sm font-medium text-white disabled:opacity-60 sm:w-auto"
-                >
-                  {savingServices ? "Saving..." : "Save service names"}
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={() => void saveSaleButtons()}
+                disabled={savingSaleButtons}
+                className="mt-4 w-full rounded-xl bg-rose-900 px-4 py-3 text-sm font-medium text-white disabled:opacity-60 sm:w-auto"
+              >
+                {savingSaleButtons ? "Saving..." : "Save sale buttons"}
+              </button>
             </section>
 
             <section className="mt-10 border-t border-rose-100 pt-8">

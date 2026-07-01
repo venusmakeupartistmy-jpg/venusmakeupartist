@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { formatMoney } from "@/lib/format";
+import type { SaleButton } from "@/lib/sale-buttons";
 import {
   PAYMENT_METHODS,
   type PaymentMethod,
@@ -8,49 +10,36 @@ import {
 } from "@/lib/types";
 
 type Props = {
-  services: string[];
+  saleButtons: SaleButton[];
   onCreated: (sale: Sale) => void;
   className?: string;
 };
 
-export function SalesForm({ services, onCreated, className = "" }: Props) {
-  const [clientName, setClientName] = useState("");
-  const [service, setService] = useState(services[0] ?? "");
-  const [customService, setCustomService] = useState("");
-  const [amount, setAmount] = useState("");
+export function SalesForm({ saleButtons, onCreated, className = "" }: Props) {
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("cash");
-  const [notes, setNotes] = useState("");
+  const [activeId, setActiveId] = useState<string | null>(null);
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (service === "custom") return;
-    if (!services.includes(service)) {
-      setService(services[0] ?? "custom");
-    }
-  }, [service, services]);
+  async function recordSale(buttonId: string) {
+    const preset = saleButtons.find((item) => item.id === buttonId);
+    if (!preset || activeId) return;
 
-  async function onSubmit(event: React.FormEvent) {
-    event.preventDefault();
     setError("");
-    setLoading(true);
-
-    const resolvedService =
-      service === "custom" ? customService.trim() : service;
+    setActiveId(buttonId);
 
     const response = await fetch("/api/sales", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        client_name: clientName,
-        service: resolvedService,
-        amount: Number(amount),
+        client_name: "",
+        service: preset.label,
+        amount: preset.amount,
         payment_method: paymentMethod,
-        notes,
+        notes: "",
       }),
     });
 
-    setLoading(false);
+    setActiveId(null);
 
     if (!response.ok) {
       const data = (await response.json()) as { error?: string };
@@ -60,116 +49,59 @@ export function SalesForm({ services, onCreated, className = "" }: Props) {
 
     const data = (await response.json()) as { sale: Sale };
     onCreated(data.sale);
-    setClientName("");
-    setAmount("");
-    setNotes("");
-    setCustomService("");
-    setService(services[0] ?? "custom");
-    setPaymentMethod("cash");
   }
 
   return (
-    <form
-      onSubmit={onSubmit}
+    <section
       className={`min-w-0 rounded-3xl border border-rose-100 bg-white/80 p-4 shadow-sm backdrop-blur sm:p-6 ${className}`}
     >
       <h2 className="font-serif text-xl text-rose-950 sm:text-2xl">Record a sale</h2>
       <p className="mt-1 text-sm text-rose-800/70">
-        New entries appear instantly in your live ledger.
+        Tap a button — saved instantly. Rename buttons in Settings.
       </p>
 
-      <div className="mt-6 grid gap-4 md:grid-cols-2">
-        <label className="block text-sm">
-          <span className="mb-2 block font-medium text-rose-950">Client name</span>
-          <input
-            value={clientName}
-            onChange={(event) => setClientName(event.target.value)}
-            className="w-full rounded-xl border border-rose-200 px-4 py-3 outline-none focus:ring-2 focus:ring-rose-300"
-            placeholder="Optional"
-          />
-        </label>
-
-        <label className="block text-sm">
-          <span className="mb-2 block font-medium text-rose-950">Amount (MYR)</span>
-          <input
-            type="number"
-            min="0"
-            step="0.01"
-            value={amount}
-            onChange={(event) => setAmount(event.target.value)}
-            className="w-full rounded-xl border border-rose-200 px-4 py-3 outline-none focus:ring-2 focus:ring-rose-300"
-            placeholder="0.00"
-            required
-          />
-        </label>
-
-        <label className="block text-sm md:col-span-2">
-          <span className="mb-2 block font-medium text-rose-950">Service</span>
-          <select
-            value={service}
-            onChange={(event) => setService(event.target.value)}
-            className="w-full rounded-xl border border-rose-200 px-4 py-3 outline-none focus:ring-2 focus:ring-rose-300"
+      <div className="mt-4 flex flex-wrap gap-2">
+        {PAYMENT_METHODS.map((item) => (
+          <button
+            key={item.value}
+            type="button"
+            onClick={() => setPaymentMethod(item.value)}
+            className={`rounded-full px-3 py-1.5 text-xs font-medium transition sm:text-sm ${
+              paymentMethod === item.value
+                ? "bg-rose-900 text-white"
+                : "border border-rose-200 text-rose-900 hover:bg-rose-50"
+            }`}
           >
-            {services.map((item) => (
-              <option key={item} value={item}>
-                {item}
-              </option>
-            ))}
-            <option value="custom">Custom service</option>
-          </select>
-        </label>
+            {item.label}
+          </button>
+        ))}
+      </div>
 
-        {service === "custom" ? (
-          <label className="block text-sm md:col-span-2">
-            <span className="mb-2 block font-medium text-rose-950">
-              Custom service name
-            </span>
-            <input
-              value={customService}
-              onChange={(event) => setCustomService(event.target.value)}
-              className="w-full rounded-xl border border-rose-200 px-4 py-3 outline-none focus:ring-2 focus:ring-rose-300"
-              required
-            />
-          </label>
-        ) : null}
+      <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
+        {saleButtons.map((preset) => {
+          const busy = activeId === preset.id;
+          const disabled = activeId !== null && !busy;
 
-        <label className="block text-sm">
-          <span className="mb-2 block font-medium text-rose-950">Payment</span>
-          <select
-            value={paymentMethod}
-            onChange={(event) =>
-              setPaymentMethod(event.target.value as PaymentMethod)
-            }
-            className="w-full rounded-xl border border-rose-200 px-4 py-3 outline-none focus:ring-2 focus:ring-rose-300"
-          >
-            {PAYMENT_METHODS.map((item) => (
-              <option key={item.value} value={item.value}>
-                {item.label}
-              </option>
-            ))}
-          </select>
-        </label>
-
-        <label className="block text-sm md:col-span-2">
-          <span className="mb-2 block font-medium text-rose-950">Notes</span>
-          <textarea
-            value={notes}
-            onChange={(event) => setNotes(event.target.value)}
-            className="min-h-24 w-full rounded-xl border border-rose-200 px-4 py-3 outline-none focus:ring-2 focus:ring-rose-300"
-            placeholder="Package details, location, deposit, etc."
-          />
-        </label>
+          return (
+            <button
+              key={preset.id}
+              type="button"
+              disabled={disabled}
+              onClick={() => void recordSale(preset.id)}
+              className="flex min-h-[3.25rem] items-center justify-between gap-3 rounded-2xl border border-rose-200 bg-white px-4 py-3 text-left transition hover:border-rose-400 hover:bg-rose-50/80 disabled:opacity-50"
+            >
+              <span className="min-w-0 text-sm font-medium leading-snug text-rose-950 sm:text-base">
+                {busy ? "Saving…" : preset.label}
+              </span>
+              <span className="shrink-0 font-serif text-base text-rose-900 sm:text-lg">
+                {formatMoney(preset.amount)}
+              </span>
+            </button>
+          );
+        })}
       </div>
 
       {error ? <p className="mt-4 text-sm text-rose-700">{error}</p> : null}
-
-      <button
-        type="submit"
-        disabled={loading}
-        className="mt-6 w-full rounded-xl bg-rose-900 px-5 py-3 font-medium text-white transition hover:bg-rose-800 disabled:opacity-60 sm:w-auto"
-      >
-        {loading ? "Saving..." : "Add sale"}
-      </button>
-    </form>
+    </section>
   );
 }

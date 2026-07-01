@@ -2,8 +2,10 @@ import { NextResponse } from "next/server";
 import { isAdminAuthenticated } from "@/lib/auth-server";
 import {
   getServicePresets,
+  getSaleButtons,
   getWebsitePackages,
   getWhatsAppNumber,
+  saveSaleButtons,
   saveServicePresets,
   saveWebsitePackages,
   saveWhatsAppNumber,
@@ -17,12 +19,13 @@ export async function GET() {
   if (!(await isAdminAuthenticated())) return unauthorized();
 
   try {
-    const [services, whatsappNumber, websitePackages] = await Promise.all([
+    const [services, whatsappNumber, websitePackages, saleButtons] = await Promise.all([
       getServicePresets(),
       getWhatsAppNumber(),
       getWebsitePackages(),
+      getSaleButtons(),
     ]);
-    return NextResponse.json({ services, whatsappNumber, websitePackages });
+    return NextResponse.json({ services, whatsappNumber, websitePackages, saleButtons });
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Could not load settings." },
@@ -38,12 +41,14 @@ export async function PATCH(request: Request) {
     services?: string[];
     whatsappNumber?: string;
     websitePackages?: unknown;
+    saleButtons?: unknown;
   };
 
   if (
     !Array.isArray(body.services) &&
     body.whatsappNumber === undefined &&
-    body.websitePackages === undefined
+    body.websitePackages === undefined &&
+    body.saleButtons === undefined
   ) {
     return NextResponse.json({ error: "Nothing to update." }, { status: 400 });
   }
@@ -52,6 +57,7 @@ export async function PATCH(request: Request) {
     let services = await getServicePresets();
     let whatsappNumber = await getWhatsAppNumber();
     let websitePackages = await getWebsitePackages();
+    let saleButtons = await getSaleButtons();
 
     if (Array.isArray(body.services)) {
       services = await saveServicePresets(body.services);
@@ -65,7 +71,11 @@ export async function PATCH(request: Request) {
       websitePackages = await saveWebsitePackages(body.websitePackages);
     }
 
-    return NextResponse.json({ services, whatsappNumber, websitePackages });
+    if (body.saleButtons !== undefined) {
+      saleButtons = await saveSaleButtons(body.saleButtons);
+    }
+
+    return NextResponse.json({ services, whatsappNumber, websitePackages, saleButtons });
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Could not save settings." },
