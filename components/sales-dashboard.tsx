@@ -6,6 +6,7 @@ import {
   getDateRange,
   toQueryRange,
   formatRangeLabel,
+  todayIsoDate,
   type DateRangePreset,
 } from "@/lib/date-range";
 import { downloadSalesCsv } from "@/lib/export-sales";
@@ -23,9 +24,10 @@ import { SalesForm } from "@/components/sales-form";
 import { SalesTable } from "@/components/sales-table";
 
 export function SalesDashboard() {
-  const [preset, setPreset] = useState<DateRangePreset>("past-week");
+  const [preset, setPreset] = useState<DateRangePreset>("today");
   const [customFrom, setCustomFrom] = useState("");
   const [customTo, setCustomTo] = useState("");
+  const [todayKey, setTodayKey] = useState(todayIsoDate());
   const [saleButtons, setSaleButtons] = useState<SaleButton[]>(DEFAULT_SALE_BUTTONS);
   const [whatsappNumber, setWhatsappNumber] = useState("");
   const [websitePackages, setWebsitePackages] = useState<WebsitePackage[]>(
@@ -42,8 +44,17 @@ export function SalesDashboard() {
 
   const range = useMemo(
     () => getDateRange(preset, customFrom, customTo),
-    [preset, customFrom, customTo],
+    [preset, customFrom, customTo, todayKey],
   );
+
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      const next = todayIsoDate();
+      setTodayKey((current) => (current === next ? current : next));
+    }, 60_000);
+
+    return () => window.clearInterval(interval);
+  }, []);
 
   const loadSettings = useCallback(async () => {
     const response = await fetch("/api/settings", { cache: "no-store" });
@@ -149,11 +160,13 @@ export function SalesDashboard() {
   function onPresetChange(nextPreset: DateRangePreset) {
     setPreset(nextPreset);
     if (nextPreset === "custom" && !customFrom && !customTo) {
-      const current = getDateRange("past-week");
+      const current = getDateRange("today");
       setCustomFrom(current.from);
       setCustomTo(current.to);
     }
   }
+
+  const isTodayView = preset === "today";
 
   return (
     <div className="mx-auto w-full min-w-0 max-w-6xl px-3 py-6 sm:px-4 sm:py-10">
@@ -186,13 +199,17 @@ export function SalesDashboard() {
 
       <div className="mb-6 grid gap-3 sm:mb-8 sm:gap-4 md:grid-cols-3">
         <div className="rounded-3xl border border-rose-100 bg-white/80 p-4 shadow-sm sm:p-6">
-          <p className="text-sm text-rose-800/70">Period total</p>
+          <p className="text-sm text-rose-800/70">
+            {isTodayView ? "Today's total" : "Period total"}
+          </p>
           <p className="mt-2 break-words font-serif text-2xl text-rose-950 sm:text-3xl">
             {formatMoney(total)}
           </p>
         </div>
         <div className="rounded-3xl border border-rose-100 bg-white/80 p-4 shadow-sm sm:p-6">
-          <p className="text-sm text-rose-800/70">Sales count</p>
+          <p className="text-sm text-rose-800/70">
+            {isTodayView ? "Today's sales" : "Sales count"}
+          </p>
           <p className="mt-2 font-serif text-2xl text-rose-950 sm:text-3xl">{count}</p>
         </div>
         <div className="rounded-3xl border border-rose-100 bg-white/80 p-4 shadow-sm sm:p-6">

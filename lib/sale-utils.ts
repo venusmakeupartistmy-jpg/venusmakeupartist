@@ -13,6 +13,10 @@ export function fromDatetimeLocalValue(value: string) {
   return new Date(value).toISOString();
 }
 
+export function dateOnlyToSoldAtIso(date: string) {
+  return `${date}T12:00:00.000+08:00`;
+}
+
 export function validateSaleUpdate(body: SaleUpdateInput) {
   if (!body.service?.trim()) {
     return "Service is required.";

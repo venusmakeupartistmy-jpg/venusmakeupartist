@@ -1,4 +1,4 @@
-export type DateRangePreset = "past-week" | "this-month" | "custom";
+export type DateRangePreset = "today" | "past-week" | "this-month" | "custom";
 
 export type DateRange = {
   preset: DateRangePreset;
@@ -34,6 +34,14 @@ export function getDateRange(
 ): DateRange {
   const today = todayIsoDate();
   const now = new Date();
+
+  if (preset === "today") {
+    return {
+      preset,
+      from: today,
+      to: today,
+    };
+  }
 
   if (preset === "past-week") {
     const fromDate = new Date(now);
@@ -78,6 +86,7 @@ export function formatRangeLabel(range: DateRange) {
     year: "numeric",
   });
 
+  if (range.preset === "today") return "Today";
   if (range.preset === "past-week") return "Past 7 days";
   if (range.preset === "this-month") return "This month";
 
