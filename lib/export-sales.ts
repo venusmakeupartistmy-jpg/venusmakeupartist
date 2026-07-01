@@ -14,7 +14,6 @@ export function salesToCsv(sales: Sale[]) {
     "Client",
     "Service",
     "Amount (MYR)",
-    "Payment",
     "Notes",
   ];
 
@@ -32,7 +31,6 @@ export function salesToCsv(sales: Sale[]) {
       sale.client_name,
       sale.service,
       Number(sale.amount).toFixed(2),
-      sale.payment_method,
       sale.notes,
     ].map(escapeCsv);
   });

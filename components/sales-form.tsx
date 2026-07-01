@@ -3,11 +3,7 @@
 import { useState } from "react";
 import { formatMoney } from "@/lib/format";
 import type { SaleButton } from "@/lib/sale-buttons";
-import {
-  PAYMENT_METHODS,
-  type PaymentMethod,
-  type Sale,
-} from "@/lib/types";
+import type { Sale } from "@/lib/types";
 
 type Props = {
   saleButtons: SaleButton[];
@@ -16,7 +12,6 @@ type Props = {
 };
 
 export function SalesForm({ saleButtons, onCreated, className = "" }: Props) {
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("cash");
   const [activeId, setActiveId] = useState<string | null>(null);
   const [error, setError] = useState("");
 
@@ -34,7 +29,6 @@ export function SalesForm({ saleButtons, onCreated, className = "" }: Props) {
         client_name: "",
         service: preset.label,
         amount: preset.amount,
-        payment_method: paymentMethod,
         notes: "",
       }),
     });
@@ -59,23 +53,6 @@ export function SalesForm({ saleButtons, onCreated, className = "" }: Props) {
       <p className="mt-1 text-sm text-rose-800/70">
         Tap a button — saved instantly. Rename buttons in Settings.
       </p>
-
-      <div className="mt-4 flex flex-wrap gap-2">
-        {PAYMENT_METHODS.map((item) => (
-          <button
-            key={item.value}
-            type="button"
-            onClick={() => setPaymentMethod(item.value)}
-            className={`rounded-full px-3 py-1.5 text-xs font-medium transition sm:text-sm ${
-              paymentMethod === item.value
-                ? "bg-rose-900 text-white"
-                : "border border-rose-200 text-rose-900 hover:bg-rose-50"
-            }`}
-          >
-            {item.label}
-          </button>
-        ))}
-      </div>
 
       <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
         {saleButtons.map((preset) => {

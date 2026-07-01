@@ -7,8 +7,6 @@ import {
   toDatetimeLocalValue,
 } from "@/lib/sale-utils";
 import {
-  PAYMENT_METHODS,
-  type PaymentMethod,
   type Sale,
   type SaleUpdateInput,
 } from "@/lib/types";
@@ -45,9 +43,6 @@ function SaleEditor({
     isCustomService ? sale.service : "",
   );
   const [amount, setAmount] = useState(String(sale.amount));
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(
-    sale.payment_method,
-  );
   const [notes, setNotes] = useState(sale.notes);
   const [soldAt, setSoldAt] = useState(toDatetimeLocalValue(sale.sold_at));
 
@@ -59,7 +54,7 @@ function SaleEditor({
       client_name: clientName,
       service: resolvedService,
       amount: Number(amount),
-      payment_method: paymentMethod,
+      payment_method: sale.payment_method,
       notes,
       sold_at: fromDatetimeLocalValue(soldAt),
     });
@@ -88,23 +83,6 @@ function SaleEditor({
             onChange={(event) => setAmount(event.target.value)}
             className={inputClass}
           />
-        </label>
-
-        <label className="block text-xs">
-          <span className="mb-0.5 block text-rose-800/60">Payment</span>
-          <select
-            value={paymentMethod}
-            onChange={(event) =>
-              setPaymentMethod(event.target.value as PaymentMethod)
-            }
-            className={inputClass}
-          >
-            {PAYMENT_METHODS.map((item) => (
-              <option key={item.value} value={item.value}>
-                {item.label}
-              </option>
-            ))}
-          </select>
         </label>
 
         <label className="col-span-2 block text-xs sm:col-span-1">
@@ -249,12 +227,6 @@ export function SalesTable({ sales, services, onDelete, onUpdate }: Props) {
                     <dt className="text-rose-800/70">Service</dt>
                     <dd className="mt-1 text-rose-950">{sale.service}</dd>
                   </div>
-                  <div>
-                    <dt className="text-rose-800/70">Payment</dt>
-                    <dd className="mt-1 capitalize text-rose-950">
-                      {sale.payment_method}
-                    </dd>
-                  </div>
                   {sale.notes ? (
                     <div>
                       <dt className="text-rose-800/70">Notes</dt>
@@ -276,7 +248,6 @@ export function SalesTable({ sales, services, onDelete, onUpdate }: Props) {
                 <th className="px-4 py-3 font-medium">Time</th>
                 <th className="px-4 py-3 font-medium">Client</th>
                 <th className="px-4 py-3 font-medium">Service</th>
-                <th className="px-4 py-3 font-medium">Payment</th>
                 <th className="px-4 py-3 font-medium">Amount</th>
                 <th className="px-4 py-3 font-medium">Notes</th>
                 <th className="px-4 py-3 font-medium" />
@@ -286,7 +257,7 @@ export function SalesTable({ sales, services, onDelete, onUpdate }: Props) {
               {sales.map((sale) => (
                 <tr key={sale.id} className="border-t border-rose-100 align-top">
                   {editingId === sale.id ? (
-                    <td colSpan={7} className="px-3 py-2">
+                    <td colSpan={6} className="px-3 py-2">
                       <SaleEditor
                         sale={sale}
                         services={services}
@@ -302,7 +273,6 @@ export function SalesTable({ sales, services, onDelete, onUpdate }: Props) {
                       </td>
                       <td className="px-4 py-3">{sale.client_name || "—"}</td>
                       <td className="px-4 py-3">{sale.service}</td>
-                      <td className="px-4 py-3 capitalize">{sale.payment_method}</td>
                       <td className="px-4 py-3 font-medium text-rose-950">
                         {formatMoney(Number(sale.amount))}
                       </td>
