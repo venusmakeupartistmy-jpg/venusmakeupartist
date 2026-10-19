@@ -154,7 +154,7 @@ export function SiteFooter({ whatsappNumber = "" }: { whatsappNumber?: string })
             </li>
             <li>
               <Link href="/portfolio" className="transition hover:text-champagne">
-                Professional portfolio
+                Resume / CV
               </Link>
             </li>
             <li>

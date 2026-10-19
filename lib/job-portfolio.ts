@@ -1,4 +1,4 @@
-/** Professional work portfolio for job applications — add photos in public/portfolio/. */
+/** Resume / CV content for job applications — edit this file to update the page. */
 
 export type WorkCategory =
   | "bridal"
@@ -12,12 +12,11 @@ export type WorkPiece = {
   src: string;
   alt: string;
   category: WorkCategory;
-  /** Short caption shown in lightbox / on hover */
   caption?: string;
 };
 
 export const WORK_CATEGORIES: { id: WorkCategory | "all"; label: string }[] = [
-  { id: "all", label: "All work" },
+  { id: "all", label: "All" },
   { id: "bridal", label: "Bridal" },
   { id: "soft-glam", label: "Soft glam" },
   { id: "event", label: "Event" },
@@ -25,53 +24,90 @@ export const WORK_CATEGORIES: { id: WorkCategory | "all"; label: string }[] = [
   { id: "creative", label: "Creative" },
 ];
 
-export const portfolioProfile = {
+export const resume = {
   name: "Venus",
-  fullName: "Venus Makeup Artist",
-  title: "Professional Makeup Artist & Hair Stylist",
+  fullName: "Venus",
+  headline: "Makeup Artist & Hair Stylist",
   location: "Kuala Lumpur, Malaysia",
-  email: "", // optional — add if you want it public
-  phone: "", // optional
+  email: "", // e.g. "hello@example.com"
+  phone: "", // e.g. "+60 12-345 6789"
   instagram: "https://www.instagram.com/venusss_makeupartist/",
   instagramHandle: "@venusss_makeupartist",
   website: "https://venusmakeupartist.site",
+  websiteLabel: "venusmakeupartist.site",
   headshot: "/portfolio/profile.jpg",
   summary:
-    "Makeup artist and hair stylist based in Kuala Lumpur, specialising in bridal, ROM, and event beauty. Focused on refined skin finish, balanced colour, and looks that photograph well and last through long event days. Available for salon, studio, or on-location work across the Klang Valley.",
-  skills: [
-    "Bridal makeup",
-    "Soft glam & evening makeup",
-    "ROM & solemnisation looks",
-    "Hairstyling & updos",
-    "Skin prep & colour matching",
-    "On-location / travel appointments",
-    "Client consultation",
-    "Touch-up & longevity techniques",
+    "Professional makeup artist and hair stylist with hands-on experience in bridal, ROM, and event beauty. Skilled in skin prep, colour matching, soft glam, and lasting looks for photography and long event days. Reliable, client-focused, and available for salon, studio, or on-location appointments across the Klang Valley.",
+  experience: [
+    {
+      role: "Makeup Artist & Hair Stylist",
+      org: "Venus Makeup Artist (Independent)",
+      location: "Kuala Lumpur / Klang Valley",
+      period: "Present",
+      bullets: [
+        "Provide bridal, ROM, and event makeup and hairstyling for private clients.",
+        "Conduct bridal trials and deliver wedding-day looks designed for longevity and photography.",
+        "Manage client consultations, bookings, and on-location appointments.",
+        "Maintain a consistent professional standard for soft glam, formal, and creative looks.",
+      ],
+    },
   ],
-  highlights: [
+  skills: {
+    technical: [
+      "Bridal makeup",
+      "Soft glam & evening makeup",
+      "ROM / solemnisation looks",
+      "Hairstyling & updos",
+      "Skin prep & colour matching",
+      "Touch-up & longevity techniques",
+    ],
+    professional: [
+      "Client consultation",
+      "On-location / travel service",
+      "Time management for event schedules",
+      "Portfolio & social presentation",
+    ],
+  },
+  education: [
     {
-      title: "Bridal & ROM",
-      detail:
-        "Full bridal packages including trial, wedding-day makeup and hair, with looks designed for photos and long wear.",
+      title: "Professional makeup & hair training",
+      detail: "Add school / course name, year, and certificate here.",
+      period: "",
     },
-    {
-      title: "Events & dinners",
-      detail:
-        "Soft glam and polished evening makeup for dinners, parties, and formal occasions.",
-    },
-    {
-      title: "On-location service",
-      detail:
-        "Travels across Kuala Lumpur and the Klang Valley for home, hotel, and venue appointments.",
-    },
+  ],
+  languages: ["English", "Bahasa Malaysia", "Chinese (optional — edit as needed)"],
+  extras: [
+    "Available for full-time, part-time, or freelance makeup artist roles",
+    "Own kit for bridal and event work",
+    "Willing to travel within Klang Valley",
   ],
 };
 
+/** Keep as alias so older imports still work if referenced. */
+export const portfolioProfile = {
+  name: resume.name,
+  fullName: resume.fullName,
+  title: resume.headline,
+  location: resume.location,
+  email: resume.email,
+  phone: resume.phone,
+  instagram: resume.instagram,
+  instagramHandle: resume.instagramHandle,
+  website: resume.website,
+  headshot: resume.headshot,
+  summary: resume.summary,
+  skills: [...resume.skills.technical, ...resume.skills.professional],
+  highlights: resume.experience[0]
+    ? resume.experience[0].bullets.map((detail, index) => ({
+        title: `Highlight ${index + 1}`,
+        detail,
+      }))
+    : [],
+};
+
 /**
- * Selected work for the portfolio grid.
- * To add photos later (aim for 20–30):
- * 1. Drop images into public/portfolio/ (e.g. work-07.jpg)
- * 2. Add an entry below with id, src, alt, and category
+ * Selected work samples (attach more photos for applications).
+ * Drop files in public/portfolio/ and add entries below (target 20–30).
  */
 export const portfolioWorks: WorkPiece[] = [
   {

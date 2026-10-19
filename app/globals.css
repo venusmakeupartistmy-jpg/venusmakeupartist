@@ -458,3 +458,13 @@ body {
     box-shadow: 0 12px 28px rgba(26, 20, 16, 0.14);
   }
 }
+
+@media print {
+  @page {
+    margin: 12mm;
+  }
+
+  body {
+    background: white !important;
+  }
+}

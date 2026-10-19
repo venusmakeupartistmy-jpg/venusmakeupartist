@@ -2,11 +2,11 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import {
   WORK_CATEGORIES,
-  portfolioProfile,
   portfolioWorks,
+  resume,
   type WorkCategory,
   type WorkPiece,
 } from "@/lib/job-portfolio";
@@ -15,6 +15,14 @@ import { buildWhatsAppUrl } from "@/lib/whatsapp";
 type Props = {
   whatsappNumber?: string;
 };
+
+function SectionTitle({ children }: { children: ReactNode }) {
+  return (
+    <h2 className="border-b border-neutral-800 pb-1.5 text-[0.7rem] font-semibold tracking-[0.22em] text-neutral-900 uppercase">
+      {children}
+    </h2>
+  );
+}
 
 export function JobPortfolioPage({ whatsappNumber = "" }: Props) {
   const [filter, setFilter] = useState<WorkCategory | "all">("all");
@@ -27,14 +35,25 @@ export function JobPortfolioPage({ whatsappNumber = "" }: Props) {
 
   const whatsappHref = whatsappNumber ? buildWhatsAppUrl(whatsappNumber) : "";
 
+  const contactBits = [
+    resume.location,
+    resume.email || null,
+    resume.phone || null,
+    resume.instagramHandle,
+    resume.websiteLabel,
+  ].filter(Boolean) as string[];
+
   useEffect(() => {
     if (!active) return;
+    const current = active;
 
     function onKey(event: KeyboardEvent) {
-      if (event.key === "Escape") setActive(null);
-      if (!active) return;
+      if (event.key === "Escape") {
+        setActive(null);
+        return;
+      }
 
-      const index = works.findIndex((item) => item.id === active.id);
+      const index = works.findIndex((item) => item.id === current.id);
       if (index < 0) return;
 
       if (event.key === "ArrowRight") {
@@ -56,156 +75,241 @@ export function JobPortfolioPage({ whatsappNumber = "" }: Props) {
   }, [active, works]);
 
   return (
-    <div className="min-h-screen bg-[#f7f4ef] text-espresso">
-      <header className="border-b border-espresso/10 bg-[#f7f4ef]/95 backdrop-blur-md">
-        <div className="mx-auto flex w-full max-w-5xl items-center justify-between gap-3 px-4 py-4 sm:px-6">
-          <div className="min-w-0">
-            <p className="font-serif text-xl italic text-espresso sm:text-2xl">
-              {portfolioProfile.name}
-            </p>
-            <p className="mt-0.5 truncate text-xs tracking-[0.14em] text-taupe uppercase">
-              Portfolio
-            </p>
-          </div>
-          <nav className="flex shrink-0 items-center gap-2 text-xs tracking-[0.12em] uppercase sm:gap-3">
-            <a href="#work" className="hidden text-mocha transition hover:text-espresso sm:inline">
-              Work
-            </a>
-            <a href="#about" className="hidden text-mocha transition hover:text-espresso sm:inline">
-              About
-            </a>
-            <a href="#contact" className="text-mocha transition hover:text-espresso">
-              Contact
-            </a>
+    <div className="min-h-screen bg-neutral-200/80 text-neutral-900 print:bg-white">
+      {/* Top bar — hidden when printing */}
+      <div className="border-b border-neutral-300 bg-white print:hidden">
+        <div className="mx-auto flex w-full max-w-[820px] items-center justify-between gap-3 px-4 py-3 sm:px-6">
+          <p className="text-xs tracking-[0.16em] text-neutral-500 uppercase">
+            Resume
+          </p>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => window.print()}
+              className="rounded-full border border-neutral-300 px-3 py-1.5 text-xs tracking-[0.12em] text-neutral-700 uppercase transition hover:bg-neutral-50"
+            >
+              Print / PDF
+            </button>
             <Link
               href="/"
-              className="rounded-full border border-espresso/15 px-3 py-2 text-mocha transition hover:bg-espresso/5"
+              className="rounded-full border border-neutral-300 px-3 py-1.5 text-xs tracking-[0.12em] text-neutral-700 uppercase transition hover:bg-neutral-50"
             >
               Website
             </Link>
-          </nav>
+          </div>
         </div>
-      </header>
+      </div>
 
-      <main>
-        {/* Intro — clean CV-style header */}
-        <section className="border-b border-espresso/10">
-          <div className="mx-auto grid w-full max-w-5xl gap-8 px-4 py-10 sm:gap-10 sm:px-6 sm:py-14 md:grid-cols-[200px_1fr] md:items-start">
-            <div className="relative mx-auto aspect-[4/5] w-40 overflow-hidden rounded-sm bg-espresso/5 sm:w-48 md:mx-0 md:w-full">
+      {/* Resume sheet */}
+      <div className="mx-auto w-full max-w-[820px] px-3 py-6 sm:px-4 sm:py-10 print:max-w-none print:px-0 print:py-0">
+        <article className="bg-white px-5 py-8 shadow-sm sm:px-10 sm:py-12 print:shadow-none">
+          {/* Header */}
+          <header className="flex flex-col gap-5 border-b border-neutral-800 pb-6 sm:flex-row sm:items-start sm:justify-between">
+            <div className="min-w-0 flex-1 text-center sm:text-left">
+              <h1 className="font-serif text-4xl tracking-tight text-neutral-900 sm:text-5xl">
+                {resume.fullName}
+              </h1>
+              <p className="mt-2 text-sm font-medium tracking-[0.08em] text-neutral-700 uppercase sm:text-base">
+                {resume.headline}
+              </p>
+              <p className="mt-3 text-sm leading-relaxed text-neutral-600">
+                {contactBits.map((bit, index) => (
+                  <span key={bit}>
+                    {index > 0 ? (
+                      <span className="mx-2 text-neutral-300" aria-hidden>
+                        |
+                      </span>
+                    ) : null}
+                    {bit === resume.instagramHandle ? (
+                      <a
+                        href={resume.instagram}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="underline-offset-2 hover:underline"
+                      >
+                        {bit}
+                      </a>
+                    ) : bit === resume.websiteLabel ? (
+                      <a
+                        href={resume.website}
+                        className="underline-offset-2 hover:underline"
+                      >
+                        {bit}
+                      </a>
+                    ) : bit === resume.email && resume.email ? (
+                      <a
+                        href={`mailto:${resume.email}`}
+                        className="underline-offset-2 hover:underline"
+                      >
+                        {bit}
+                      </a>
+                    ) : bit === resume.phone && resume.phone ? (
+                      <a
+                        href={`tel:${resume.phone.replace(/\s/g, "")}`}
+                        className="underline-offset-2 hover:underline"
+                      >
+                        {bit}
+                      </a>
+                    ) : (
+                      bit
+                    )}
+                  </span>
+                ))}
+              </p>
+              {(whatsappHref || resume.email) && (
+                <div className="mt-4 flex flex-wrap justify-center gap-2 print:hidden sm:justify-start">
+                  {whatsappHref ? (
+                    <a
+                      href={whatsappHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex min-h-9 items-center rounded-full bg-neutral-900 px-4 py-1.5 text-[0.65rem] font-medium tracking-[0.14em] text-white uppercase"
+                    >
+                      WhatsApp
+                    </a>
+                  ) : null}
+                  {resume.email ? (
+                    <a
+                      href={`mailto:${resume.email}`}
+                      className="inline-flex min-h-9 items-center rounded-full border border-neutral-300 px-4 py-1.5 text-[0.65rem] font-medium tracking-[0.14em] text-neutral-800 uppercase"
+                    >
+                      Email
+                    </a>
+                  ) : null}
+                </div>
+              )}
+            </div>
+
+            <div className="relative mx-auto h-28 w-28 shrink-0 overflow-hidden rounded-sm border border-neutral-200 bg-neutral-100 sm:mx-0 sm:h-32 sm:w-32 print:h-24 print:w-24">
               <Image
-                src={portfolioProfile.headshot}
-                alt={`${portfolioProfile.fullName} headshot`}
+                src={resume.headshot}
+                alt={`${resume.fullName} photo`}
                 fill
                 priority
-                sizes="200px"
+                sizes="128px"
                 className="object-cover"
               />
             </div>
+          </header>
 
-            <div className="min-w-0 text-center md:text-left">
-              <p className="text-xs font-medium tracking-[0.28em] text-taupe uppercase">
-                {portfolioProfile.location}
-              </p>
-              <h1 className="mt-3 font-serif text-4xl leading-tight text-espresso sm:text-5xl">
-                {portfolioProfile.fullName}
-              </h1>
-              <p className="mt-2 text-base text-mocha sm:text-lg">
-                {portfolioProfile.title}
-              </p>
-              <p className="mx-auto mt-5 max-w-2xl text-sm leading-relaxed text-mocha/90 md:mx-0 sm:text-base">
-                {portfolioProfile.summary}
-              </p>
+          {/* Summary */}
+          <section className="mt-7">
+            <SectionTitle>Professional summary</SectionTitle>
+            <p className="mt-3 text-sm leading-relaxed text-neutral-700 sm:text-[0.9375rem]">
+              {resume.summary}
+            </p>
+          </section>
 
-              <div className="mt-6 flex flex-wrap items-center justify-center gap-2 md:justify-start">
-                {whatsappHref ? (
-                  <a
-                    href={whatsappHref}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex min-h-11 items-center rounded-full bg-espresso px-5 py-2.5 text-xs font-medium tracking-[0.14em] text-[#f7f4ef] uppercase transition hover:bg-mocha"
-                  >
-                    WhatsApp
-                  </a>
-                ) : null}
-                <a
-                  href={portfolioProfile.instagram}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex min-h-11 items-center rounded-full border border-espresso/20 px-5 py-2.5 text-xs font-medium tracking-[0.14em] text-espresso uppercase transition hover:bg-espresso/5"
-                >
-                  Instagram
-                </a>
-                <a
-                  href="#work"
-                  className="inline-flex min-h-11 items-center rounded-full border border-espresso/20 px-5 py-2.5 text-xs font-medium tracking-[0.14em] text-espresso uppercase transition hover:bg-espresso/5"
-                >
-                  View work
-                </a>
+          {/* Experience */}
+          <section className="mt-7">
+            <SectionTitle>Experience</SectionTitle>
+            <div className="mt-4 space-y-6">
+              {resume.experience.map((job) => (
+                <div key={`${job.role}-${job.org}`}>
+                  <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
+                    <h3 className="text-base font-semibold text-neutral-900">
+                      {job.role}
+                    </h3>
+                    <p className="text-xs font-medium tracking-wide text-neutral-500 uppercase sm:text-right">
+                      {job.period}
+                    </p>
+                  </div>
+                  <p className="mt-0.5 text-sm text-neutral-700">
+                    {job.org}
+                    <span className="text-neutral-400"> · </span>
+                    {job.location}
+                  </p>
+                  <ul className="mt-3 list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-neutral-700">
+                    {job.bullets.map((bullet) => (
+                      <li key={bullet}>{bullet}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Skills */}
+          <section className="mt-7">
+            <SectionTitle>Skills</SectionTitle>
+            <div className="mt-4 grid gap-5 sm:grid-cols-2">
+              <div>
+                <h3 className="text-xs font-semibold tracking-[0.14em] text-neutral-500 uppercase">
+                  Technical
+                </h3>
+                <ul className="mt-2 space-y-1 text-sm text-neutral-700">
+                  {resume.skills.technical.map((skill) => (
+                    <li key={skill}>{skill}</li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <h3 className="text-xs font-semibold tracking-[0.14em] text-neutral-500 uppercase">
+                  Professional
+                </h3>
+                <ul className="mt-2 space-y-1 text-sm text-neutral-700">
+                  {resume.skills.professional.map((skill) => (
+                    <li key={skill}>{skill}</li>
+                  ))}
+                </ul>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
 
-        {/* Skills + highlights */}
-        <section id="about" className="border-b border-espresso/10 bg-white/50">
-          <div className="mx-auto grid w-full max-w-5xl gap-10 px-4 py-10 sm:px-6 sm:py-14 md:grid-cols-2">
+          {/* Education */}
+          <section className="mt-7">
+            <SectionTitle>Education & training</SectionTitle>
+            <div className="mt-4 space-y-3">
+              {resume.education.map((item) => (
+                <div
+                  key={item.title}
+                  className="flex flex-col gap-0.5 sm:flex-row sm:items-baseline sm:justify-between"
+                >
+                  <div>
+                    <h3 className="text-sm font-semibold text-neutral-900">
+                      {item.title}
+                    </h3>
+                    <p className="text-sm text-neutral-600">{item.detail}</p>
+                  </div>
+                  {item.period ? (
+                    <p className="text-xs font-medium tracking-wide text-neutral-500 uppercase">
+                      {item.period}
+                    </p>
+                  ) : null}
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Languages + extras */}
+          <section className="mt-7 grid gap-7 sm:grid-cols-2">
             <div>
-              <h2 className="font-serif text-2xl text-espresso sm:text-3xl">
-                Skills
-              </h2>
-              <ul className="mt-5 grid grid-cols-1 gap-2 sm:grid-cols-2">
-                {portfolioProfile.skills.map((skill) => (
-                  <li
-                    key={skill}
-                    className="border-b border-espresso/10 py-2 text-sm text-mocha"
-                  >
-                    {skill}
-                  </li>
+              <SectionTitle>Languages</SectionTitle>
+              <p className="mt-3 text-sm text-neutral-700">
+                {resume.languages.join(" · ")}
+              </p>
+            </div>
+            <div>
+              <SectionTitle>Additional information</SectionTitle>
+              <ul className="mt-3 list-disc space-y-1.5 pl-5 text-sm text-neutral-700">
+                {resume.extras.map((item) => (
+                  <li key={item}>{item}</li>
                 ))}
               </ul>
             </div>
-            <div>
-              <h2 className="font-serif text-2xl text-espresso sm:text-3xl">
-                Experience focus
-              </h2>
-              <div className="mt-5 space-y-5">
-                {portfolioProfile.highlights.map((item) => (
-                  <div key={item.title}>
-                    <h3 className="text-sm font-medium tracking-[0.08em] text-espresso uppercase">
-                      {item.title}
-                    </h3>
-                    <p className="mt-2 text-sm leading-relaxed text-mocha/90">
-                      {item.detail}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
+          </section>
 
-        {/* Work gallery */}
-        <section id="work" className="border-b border-espresso/10">
-          <div className="mx-auto w-full max-w-5xl px-4 py-10 sm:px-6 sm:py-14">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-              <div>
-                <p className="text-xs font-medium tracking-[0.28em] text-taupe uppercase">
-                  Selected work
-                </p>
-                <h2 className="mt-2 font-serif text-2xl text-espresso sm:text-3xl">
-                  Portfolio
-                </h2>
-                <p className="mt-2 text-sm text-mocha/80">
-                  {works.length} look{works.length === 1 ? "" : "s"}
-                  {filter !== "all" ? ` · ${WORK_CATEGORIES.find((c) => c.id === filter)?.label}` : ""}
-                </p>
-              </div>
-            </div>
+          {/* Work samples */}
+          <section id="work" className="mt-7">
+            <SectionTitle>Selected work</SectionTitle>
+            <p className="mt-2 text-sm text-neutral-600">
+              Sample looks for review. Tap to enlarge.
+            </p>
 
             <div
               role="tablist"
-              aria-label="Filter work by category"
-              className="mt-6 flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+              aria-label="Filter work"
+              className="mt-4 flex gap-1.5 overflow-x-auto pb-1 print:hidden [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             >
               {WORK_CATEGORIES.map((category) => {
                 const selected = filter === category.id;
@@ -216,10 +320,10 @@ export function JobPortfolioPage({ whatsappNumber = "" }: Props) {
                     role="tab"
                     aria-selected={selected}
                     onClick={() => setFilter(category.id)}
-                    className={`min-h-10 shrink-0 rounded-full px-4 py-2 text-xs tracking-[0.12em] uppercase transition ${
+                    className={`min-h-9 shrink-0 rounded-full px-3 py-1.5 text-[0.65rem] tracking-[0.12em] uppercase transition ${
                       selected
-                        ? "bg-espresso text-[#f7f4ef]"
-                        : "border border-espresso/15 text-mocha hover:bg-espresso/5"
+                        ? "bg-neutral-900 text-white"
+                        : "border border-neutral-300 text-neutral-700 hover:bg-neutral-50"
                     }`}
                   >
                     {category.label}
@@ -228,148 +332,48 @@ export function JobPortfolioPage({ whatsappNumber = "" }: Props) {
               })}
             </div>
 
-            {works.length === 0 ? (
-              <p className="mt-10 text-sm text-mocha/70">
-                No pieces in this category yet.
-              </p>
-            ) : (
-              <div className="mt-8 grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-3 lg:grid-cols-4">
-                {works.map((piece) => (
-                  <button
-                    key={piece.id}
-                    type="button"
-                    onClick={() => setActive(piece)}
-                    className="group relative aspect-[3/4] overflow-hidden rounded-sm bg-espresso/5 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-espresso/40"
-                  >
-                    <Image
-                      src={piece.src}
-                      alt={piece.alt}
-                      fill
-                      sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 240px"
-                      className="object-cover transition duration-500 group-hover:scale-[1.03]"
-                    />
-                    <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-espresso/75 to-transparent p-3 opacity-100 sm:opacity-0 sm:transition sm:group-hover:opacity-100">
-                      <span className="block text-[0.65rem] tracking-[0.16em] text-[#f7f4ef]/90 uppercase">
-                        {piece.caption ?? piece.alt}
-                      </span>
-                    </span>
-                  </button>
-                ))}
-              </div>
-            )}
-
-            <p className="mt-8 text-xs leading-relaxed text-taupe">
-              Gallery expands as new work is added. Aim for 20–30 selected pieces
-              across bridal, soft glam, event, hair, and creative.
-            </p>
-          </div>
-        </section>
-
-        {/* Contact */}
-        <section id="contact" className="bg-espresso text-[#f7f4ef]">
-          <div className="mx-auto w-full max-w-5xl px-4 py-12 sm:px-6 sm:py-16">
-            <p className="text-xs font-medium tracking-[0.28em] text-champagne/80 uppercase">
-              Contact
-            </p>
-            <h2 className="mt-3 font-serif text-3xl sm:text-4xl">
-              Available for opportunities
-            </h2>
-            <p className="mt-4 max-w-xl text-sm leading-relaxed text-[#f7f4ef]/75 sm:text-base">
-              Open to makeup and hair roles, collaborations, and professional
-              bookings. Reach out via WhatsApp or Instagram with the role or
-              brief details.
-            </p>
-
-            <dl className="mt-8 grid gap-4 text-sm sm:grid-cols-2">
-              <div>
-                <dt className="tracking-[0.14em] text-champagne/70 uppercase">
-                  Based in
-                </dt>
-                <dd className="mt-1">{portfolioProfile.location}</dd>
-              </div>
-              <div>
-                <dt className="tracking-[0.14em] text-champagne/70 uppercase">
-                  Instagram
-                </dt>
-                <dd className="mt-1">
-                  <a
-                    href={portfolioProfile.instagram}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="underline-offset-4 hover:underline"
-                  >
-                    {portfolioProfile.instagramHandle}
-                  </a>
-                </dd>
-              </div>
-              <div>
-                <dt className="tracking-[0.14em] text-champagne/70 uppercase">
-                  Website
-                </dt>
-                <dd className="mt-1">
-                  <a
-                    href={portfolioProfile.website}
-                    className="underline-offset-4 hover:underline"
-                  >
-                    venusmakeupartist.site
-                  </a>
-                </dd>
-              </div>
-              {whatsappHref ? (
-                <div>
-                  <dt className="tracking-[0.14em] text-champagne/70 uppercase">
-                    WhatsApp
-                  </dt>
-                  <dd className="mt-1">
-                    <a
-                      href={whatsappHref}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="underline-offset-4 hover:underline"
-                    >
-                      Message Venus
-                    </a>
-                  </dd>
-                </div>
-              ) : null}
-            </dl>
-
-            <div className="mt-8 flex flex-wrap gap-3">
-              {whatsappHref ? (
-                <a
-                  href={whatsappHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex min-h-11 items-center rounded-full bg-[#f7f4ef] px-5 py-2.5 text-xs font-medium tracking-[0.14em] text-espresso uppercase transition hover:bg-champagne"
+            <div className="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-4 sm:gap-2.5 print:grid-cols-4">
+              {works.map((piece) => (
+                <button
+                  key={piece.id}
+                  type="button"
+                  onClick={() => setActive(piece)}
+                  className="group relative aspect-[3/4] overflow-hidden rounded-sm border border-neutral-200 bg-neutral-100 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 print:break-inside-avoid"
                 >
-                  WhatsApp
-                </a>
-              ) : null}
-              <a
-                href={portfolioProfile.instagram}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex min-h-11 items-center rounded-full border border-[#f7f4ef]/30 px-5 py-2.5 text-xs font-medium tracking-[0.14em] text-[#f7f4ef] uppercase transition hover:bg-white/10"
-              >
-                Instagram
-              </a>
+                  <Image
+                    src={piece.src}
+                    alt={piece.alt}
+                    fill
+                    sizes="(max-width: 640px) 33vw, 160px"
+                    className="object-cover"
+                  />
+                </button>
+              ))}
             </div>
-          </div>
-        </section>
-      </main>
+            <p className="mt-3 text-xs text-neutral-500 print:hidden">
+              Add more photos in <code className="text-neutral-700">lib/job-portfolio.ts</code>{" "}
+              (target 20–30 for applications).
+            </p>
+          </section>
 
-      <footer className="border-t border-espresso/10 bg-[#f7f4ef] py-6 text-center text-xs text-taupe">
-        <p>
-          © {new Date().getFullYear()} {portfolioProfile.fullName} ·{" "}
+          {/* References note */}
+          <section className="mt-7 border-t border-neutral-200 pt-5">
+            <p className="text-center text-xs tracking-[0.16em] text-neutral-500 uppercase">
+              References available upon request
+            </p>
+          </section>
+        </article>
+
+        <p className="mt-4 text-center text-xs text-neutral-500 print:hidden">
           <Link href="/" className="underline-offset-2 hover:underline">
-            Main website
+            Back to website
           </Link>
         </p>
-      </footer>
+      </div>
 
       {active ? (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-espresso/90 p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-neutral-950/90 p-4 print:hidden"
           onClick={() => setActive(null)}
           role="dialog"
           aria-modal="true"
@@ -396,11 +400,8 @@ export function JobPortfolioPage({ whatsappNumber = "" }: Props) {
                 priority
               />
             </div>
-            <p className="mt-3 text-center text-sm text-[#f7f4ef]/85">
+            <p className="mt-3 text-center text-sm text-white/85">
               {active.caption ?? active.alt}
-            </p>
-            <p className="mt-1 text-center text-xs text-[#f7f4ef]/50">
-              Use ← → keys to browse · Esc to close
             </p>
           </div>
         </div>
