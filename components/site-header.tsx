@@ -153,6 +153,11 @@ export function SiteFooter({ whatsappNumber = "" }: { whatsappNumber?: string })
               </a>
             </li>
             <li>
+              <Link href="/portfolio" className="transition hover:text-champagne">
+                Professional portfolio
+              </Link>
+            </li>
+            <li>
               <a href="#testimonials" className="transition hover:text-champagne">
                 {t.footer.bridalLinks.testimonials}
               </a>
