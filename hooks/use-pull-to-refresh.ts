@@ -64,10 +64,6 @@ export function usePullToRefresh({ onRefresh, enabled = true }: Options) {
       const next = Math.min(delta * 0.45, PULL_MAX);
       distanceRef.current = next;
       setPullDistance(next);
-
-      if (next > 8 && event.cancelable) {
-        event.preventDefault();
-      }
     }
 
     async function onTouchEnd() {
@@ -93,7 +89,7 @@ export function usePullToRefresh({ onRefresh, enabled = true }: Options) {
     }
 
     window.addEventListener("touchstart", onTouchStart, { passive: true });
-    window.addEventListener("touchmove", onTouchMove, { passive: false });
+    window.addEventListener("touchmove", onTouchMove, { passive: true });
     window.addEventListener("touchend", onTouchEnd);
     window.addEventListener("touchcancel", onTouchEnd);
 

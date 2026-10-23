@@ -52,9 +52,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${jost.variable} ${cormorant.variable} h-full scroll-smooth antialiased`}
+      className={`${jost.variable} ${cormorant.variable} min-h-full scroll-smooth antialiased`}
     >
-      <body className="min-h-full flex flex-col overflow-x-hidden">
+      <body className="flex min-h-full flex-col">
         <LocaleProvider>{children}</LocaleProvider>
       </body>
     </html>

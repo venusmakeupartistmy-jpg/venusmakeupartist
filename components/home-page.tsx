@@ -40,7 +40,7 @@ export function HomePage({ whatsappNumber, websitePackages }: Props) {
       <SiteHeader whatsappNumber={whatsappNumber} />
       {whatsappNumber ? <WhatsAppFloatingButton phone={whatsappNumber} /> : null}
 
-      <main className="min-w-0 overflow-x-hidden">
+      <main className="min-w-0 overflow-x-clip">
         <section className="relative min-h-[70vh] overflow-hidden bg-espresso sm:min-h-[80vh]">
           <Image
             src={heroImage.src}
