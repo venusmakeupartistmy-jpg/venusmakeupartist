@@ -37,13 +37,25 @@ export const resume = {
   websiteLabel: "venusmakeupartist.site",
   headshot: "/portfolio/profile.jpg",
   summary:
-    "Professional makeup artist and hair stylist with hands-on experience in bridal, ROM, and event beauty. Skilled in skin prep, colour matching, soft glam, and lasting looks for photography and long event days. Reliable, client-focused, and available for salon, studio, or on-location appointments across the Klang Valley.",
+    "Professional makeup artist and hair stylist currently working at D'Sunshine Studio (from March 2026), with experience in bridal, ROM, and event beauty. Skilled in skin prep, colour matching, soft glam, and lasting looks for photography and long event days. Reliable, client-focused, and experienced in salon and on-location appointments across the Klang Valley.",
   experience: [
+    {
+      role: "Makeup Artist & Hair Stylist",
+      org: "D'Sunshine Studio",
+      location: "Kuala Lumpur, Malaysia",
+      period: "March 2026 – Present",
+      bullets: [
+        "Provide professional makeup and hairstyling services for studio and client appointments.",
+        "Deliver bridal, soft glam, event, and everyday looks to studio standards.",
+        "Support client consultations and ensure a polished, consistent finish for each booking.",
+        "Work collaboratively within a salon environment while maintaining strong personal presentation and service quality.",
+      ],
+    },
     {
       role: "Makeup Artist & Hair Stylist",
       org: "Venus Makeup Artist (Independent)",
       location: "Kuala Lumpur / Klang Valley",
-      period: "Present",
+      period: "Ongoing / Freelance",
       bullets: [
         "Provide bridal, ROM, and event makeup and hairstyling for private clients.",
         "Conduct bridal trials and deliver wedding-day looks designed for longevity and photography.",
@@ -77,7 +89,7 @@ export const resume = {
   ],
   languages: ["English", "Bahasa Malaysia", "Chinese (optional — edit as needed)"],
   extras: [
-    "Available for full-time, part-time, or freelance makeup artist roles",
+    "Currently employed at D'Sunshine Studio (from March 2026)",
     "Own kit for bridal and event work",
     "Willing to travel within Klang Valley",
   ],
